@@ -1,0 +1,8 @@
+{
+  "id": "UrlSlug",
+  "name": "UrlSlug",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Symbol"
+  ]
+}
