@@ -8,3 +8,22 @@ div {
   font: inherit;
   vertical-align: baseline;
 }
+
+#urlslug{
+  border-width: 0px 0px 1px 0px;
+  border-image-source: url("https://static.contentful.com/app/svg/dotted-border.svg");
+  border-image-repeat: round;
+  border-image-slice: 1 1;
+  border-color: transparent;
+  font-size: 16px;
+  height: 36px;
+  padding: 0 2px;
+  line-height: 1.5;
+}
+
+#urlslug:focus{
+  outline-color: #A5C7FE; 
+  outline-style: solid;
+  outline-width: medium;
+}
+

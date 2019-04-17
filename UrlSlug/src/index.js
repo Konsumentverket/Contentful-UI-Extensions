@@ -14,13 +14,13 @@ class App extends React.Component {
 
   detachExternalChangeHandler = null;
   detachTitleValueChangeHandler = null;
+  inputTimeoutDebounce = null
 
   constructor(props) {
     super(props);
 
     this.state = {
       value: props.sdk.field.getValue(),
-      fieldId: props.sdk.field.id,
       error: null
     };
   }
@@ -61,7 +61,7 @@ class App extends React.Component {
   validateUniqueness = value => {
     var query = {}
     query['content_type'] = this.props.sdk.entry.getSys().contentType.sys.id
-    query['fields.' + this.state.fieldId] = value
+    query['fields.' + this.props.sdk.field.id] = value
     query['sys.id[ne]'] = this.props.sdk.entry.getSys().id
     query['sys.publishedAt[exists]'] = true
     return this.props.sdk.space.getEntries(query).then(function (result) {
@@ -76,28 +76,30 @@ class App extends React.Component {
     this.setState({
       value
     })
-
-    this.validateUniqueness(value).then(hasDuplicates => {
-      if(hasDuplicates){
-        this.setState({
-          error: "Det finns redan ett innehåll med detta url-segment",
-        })
-        return;
-      }
-      this.setState({ 
-        error: null
-      });
-      if (value) {
-        this.props.sdk.field.setValue(value);
-      } else {
-        this.props.sdk.field.removeValue();
-      }
-    });
+    
+    this.inputTimeoutDebounce = clearTimeout(this.inputTimeoutDebounce);
+    this.inputTimeoutDebounce = setTimeout(() => (this.validateUniqueness(value)
+      .then(hasDuplicates => {
+        if(hasDuplicates){
+          this.setState({
+            error: "Det finns redan ett innehåll med detta url-segment!",
+          })
+          return;
+        }
+        this.setState({ 
+          error: null
+        });
+        if (value) {
+          this.props.sdk.field.setValue(value);
+        } else {
+          this.props.sdk.field.removeValue();
+        }
+    })),250);
   }
 
 
   onExternalChange = value => {
-    if(value !== this.state.value){
+    if(value !== this.state.value && this.inputTimeoutDebounce == null){
       this.setState({ value });
     }
   };
@@ -113,7 +115,7 @@ class App extends React.Component {
         value={this.state.value}
         onChange={this.onChange}
         name="urlslug"
-        id=""
+        id="urlslug"
       />
       {this.state.error ? <ValidationMessage>{this.state.error}</ValidationMessage> : null}
       </>

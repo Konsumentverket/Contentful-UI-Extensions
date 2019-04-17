@@ -15,6 +15,3 @@ yarn-error.log*
 # Dependency directories
 node_modules/
 
-# Build
-build/*
-!/build/index.html
