@@ -21,6 +21,7 @@ class App extends React.Component {
 
     this.state = {
       value: props.sdk.field.getValue(),
+      initialValue: props.sdk.field.getValue(),
       error: null
     };
   }
@@ -28,12 +29,15 @@ class App extends React.Component {
   componentDidMount() {
     this.props.sdk.window.startAutoResizer();
 
-    //handler for titlevalue change
-    var titleFieldName = this.props.sdk.contentType.displayField
-    var titleField = this.props.sdk.entry.fields[titleFieldName]
-    this.detachTitleValueChangeHandler = titleField.onValueChanged(
-      this.setValue
-    );
+    //if no initial value is set, autogenerate slug based on it
+    if(this.state.initialValue == null){
+      //handler for titlevalue change
+      var titleFieldName = this.props.sdk.contentType.displayField
+      var titleField = this.props.sdk.entry.fields[titleFieldName]
+      this.detachTitleValueChangeHandler = titleField.onValueChanged(
+        this.setValue
+      );
+    }
 
     // Handler for external field value changes (e.g. when multiple authors are working on the same entry).
     this.detachExternalChangeHandler = this.props.sdk.field.onValueChanged(
@@ -49,7 +53,7 @@ class App extends React.Component {
       this.detachTitleValueChangeHandler();
     }
   }
-
+  //custom transformation for swedish diacritics
   slugify = value => speakingurl(value,{
     custom:{
       'Å':"a", 'Ä':"a",
@@ -72,10 +76,9 @@ class App extends React.Component {
 
   setValue = value => {
     value = this.slugify(value);
-
     this.setState({
       value
-    })
+    });
     
     this.inputTimeoutDebounce = clearTimeout(this.inputTimeoutDebounce);
     this.inputTimeoutDebounce = setTimeout(() => (this.validateUniqueness(value)
@@ -83,9 +86,11 @@ class App extends React.Component {
         if(hasDuplicates){
           this.setState({
             error: "Det finns redan ett innehåll med detta url-segment!",
-          })
+          });
+          this.props.sdk.field.setInvalid(true);
           return;
         }
+        this.props.sdk.field.setInvalid(false);
         this.setState({ 
           error: null
         });
@@ -126,11 +131,3 @@ class App extends React.Component {
 init(sdk => {
   ReactDOM.render(<App sdk={sdk} />, document.getElementById('root'));
 });
-
-/**
- * By default, iframe of the extension is fully reloaded on every save of a source file.
- * If you want to use HMR (hot module reload) instead of full reload, uncomment the following lines
- */
-// if (module.hot) {
-//   module.hot.accept();
-// }
