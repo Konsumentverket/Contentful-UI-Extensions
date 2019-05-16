@@ -12,9 +12,9 @@ This extension makes listing items in an alternative way possible.
 The use case is when you want to list something and you don't want to use content or freetext editors.
 
 ### Options
-Name: ItemsList  
-Field type: Object  
-Instance parameters:  
+**Name**: ItemsList  
+**Field type**: Object  
+**Instance parameters**:  
 ```
 {
     "id": "helpText",
