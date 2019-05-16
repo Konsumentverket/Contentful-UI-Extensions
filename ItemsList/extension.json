@@ -1,19 +1,22 @@
 {
-  "id": "UrlSlug",
-  "name": "UrlSlug",
+  "id": "ItemsList",
+  "name": "ItemsList",
   "srcdoc": "./build/index.html",
   "fieldTypes": [
-    "Symbol"
-  ], 
+    "Object"
+  ],
   "parameters": {
-    "installation": [
-      
-    ],
     "instance": [{
         "id": "helpText",
         "type": "Symbol",
         "name": "Help text",
         "description": "Help text for a user to help them understand the editor"
+      },{
+        "id":"listItemType",
+        "name": "Type of list",
+        "type": "Enum",
+        "required": true,
+        "options": ["Text"]
       }
     ]
   }
