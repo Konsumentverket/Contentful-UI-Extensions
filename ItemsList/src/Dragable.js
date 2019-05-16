@@ -21,6 +21,7 @@ class Dragable extends Component {
     }
 
     onDragEnd(ev){
+        this.enterCount = 0;
         this.setState({
             dragOver: false,
             isBeingDragged: false
@@ -46,6 +47,7 @@ class Dragable extends Component {
     }
 
     onDrop(ev){
+        this.enterCount = 0;
         this.setState({
             dragOver: false
         });

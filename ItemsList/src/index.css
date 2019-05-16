@@ -14,8 +14,13 @@ div {
   margin-bottom: 15px;
   position: relative;
 }
-.item.dragOverActice .item-input input {
+.item.dragOverActice .item-input input,
+.item.dragOverActice .item-input textarea {
   box-shadow: 0 -5px 5px -5px #3c80cf;
+}
+
+.item .item-input textarea{
+  overflow: hidden;
 }
 
 .item .dragIcon{

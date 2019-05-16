@@ -5,7 +5,8 @@ import { TextLink } from '@contentful/forma-36-react-components';
 import { init } from 'contentful-ui-extensions-sdk';
 import '@contentful/forma-36-react-components/dist/styles.css';
 import './index.css';
-import SimpleListItem from './SimpleListItem'
+import TextListItem from './TextListItem';
+import TextareaListItem from './TextareaListItem';
 
 class App extends React.Component {
   static propTypes = {
@@ -24,7 +25,9 @@ class App extends React.Component {
     var type = this.props.sdk.parameters.instance.listItemType;
     switch(type){
       case "Text":
-        return SimpleListItem;
+        return TextListItem;
+      case "Textarea":
+        return TextareaListItem
       default:
         console.log("No item type for "+type+" found"); 
         return null;
@@ -35,6 +38,7 @@ class App extends React.Component {
     var type = this.props.sdk.parameters.instance.listItemType;
     switch(type){
       case "Text":
+      case "Textarea":
         return {text:""}
       default:
         console.log("No default value for type " + type);

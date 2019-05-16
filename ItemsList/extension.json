@@ -16,7 +16,7 @@
         "name": "Type of list",
         "type": "Enum",
         "required": true,
-        "options": ["Text"]
+        "options": ["Text","Textarea"]
       }
     ]
   }
