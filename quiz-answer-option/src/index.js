@@ -56,14 +56,15 @@ class App extends React.Component {
     return false;
   }
 
-  onChange = e => {
-    const value = e;
-    this.setState({ value });
-    if (value) {
-      this.props.sdk.field.setValue(value);
-    } else {
-      this.props.sdk.field.removeValue();
-    }
+  onChange(item,index){
+    var newVal = Object.assign([...this.state.value], {[index]: item});
+
+    this.setState({
+      value: newVal
+    },function(){
+      this.props.sdk.field.setValue(this.state.value);
+    });
+
   };
 
   onRemove(index){
@@ -89,6 +90,7 @@ class App extends React.Component {
   }
 
   render() { 
+
     var self = this;
     var fields = (this.state.value == null ? [] : this.state.value).map(function(e,i){
       return <AnswerListItem onChange={self.onChange.bind(self)} 

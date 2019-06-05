@@ -6,44 +6,49 @@ import Deleteable from './Deleteable';
 
 class AnswerListItem extends Component {
 
-    handleInputChange(event){ 
-/*
-        this.setState({
-            [answer]: event.answer,
-            [feedback]: event.feedback,
-            [iscorrectanswer]: event.iscorrectanswer,
-          });
-*/
-          this.changeHandler();
+    constructor(props){
+        super(props);
+
+        console.log(this.props);
+
+        this.state = {
+            answer: this.props.item.answer,
+            feedback: this.props.item.feedback,
+            iscorrectanswer: this.props.item.iscorrectanswer,
+        }
+    }
+
+    handleInputChange(event, field){ 
+        console.log(event.target.type);
+        var state = this.state;
+        state[field] = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+
+        this.setState(state);
+
+        this.props.onChange(state,this.props.index);
+          
     }
 
     render() {
         return (
             <Dragable className="item" index={this.props.index} onMove={this.props.onMove}>
                 <Deleteable onRemove={this.props.onRemove} index={this.props.index}> 
-                    <TextInput value={this.props.answer} placeholder="Svarsalternativ" className="item-input" onChange={this.handleInputChange} />
-                    <TextInput value={this.props.feedback} placeholder="Feedback" className="item-input" onChange={this.handleInputChange} />
-                    <CheckboxField id={"isCorrectAnswer"+this.props.index} checked={this.props.iscorrectanswer} labelText="Korrekt svarsalternativ" className="item-input" onChange={this.handleInputChange.bind(this)} />
+                    <TextInput value={this.state.answer} placeholder="Svarsalternativ" className="item-input" onChange={(e) => this.handleInputChange(e, "answer")} />
+                    <TextInput value={this.state.feedback} placeholder="Feedback" className="item-input" onChange={(e) => this.handleInputChange(e, "feedback")} />
+                    <CheckboxField id={"isCorrectAnswer"+this.props.index} checked={this.state.iscorrectanswer} labelText="Korrekt svarsalternativ" className="item-input" onChange={(e) => this.handleInputChange(e, "iscorrectanswer")} />
                 </Deleteable> 
             </Dragable>
         );
     }
 
-    onChange(e){
-        this.props.onChange({
-            answer: 'svar',
-            feedback: 'feedback',
-            iscorrectanswer: true,
-        },this.props.index)
+    onChange = (event) => {
+        const iscorrectanswer = event.target.checked;
+        this.setState({
+            iscorrectanswer
+        });
+        
     }
 
-    changeHandler() {
-        this.props.onChange({
-            answer: 'svar',
-            feedback: 'feedback',
-            iscorrectanswer: true,
-        },this.props.index)
-    }
 }
 
 export default AnswerListItem; 
