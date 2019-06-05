@@ -1,0 +1,51 @@
+html,
+body,
+div {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+#root{
+  scroll-behavior:auto;
+}
+.item{
+  padding:5px 0;
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  border-bottom:solid 1px #ccc;
+}
+.item:nth-child(2n) {
+  background-color:#f1f1f1;
+}
+.item:last-child{border-bottom: none;}
+
+.item.dragOverActice .item-input input,
+.item.dragOverActice .item-input textarea {
+  box-shadow: 0 -5px 5px -5px #3c80cf;
+}
+
+.item .item-input textarea{
+  overflow: hidden;
+}
+
+.item .dragIcon{
+  position: absolute;
+  top: 35px;
+  left: 0px;
+}
+
+.item-input {
+  padding:0 10px 10px 20px;
+  box-sizing: border-box;
+}
+
+
+.item-actions{
+  float: right;
+}
+

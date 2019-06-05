@@ -1,0 +1,8 @@
+{
+  "id": "quiz-answer-option",
+  "name": "quiz-answer-option",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Object"
+  ]
+}
