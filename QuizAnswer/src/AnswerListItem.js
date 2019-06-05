@@ -9,8 +9,6 @@ class AnswerListItem extends Component {
     constructor(props){
         super(props);
 
-        console.log(this.props);
-
         this.state = {
             answer: this.props.item.answer,
             feedback: this.props.item.feedback,

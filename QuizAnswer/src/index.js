@@ -37,7 +37,6 @@ class App extends React.Component {
   }
 
   onExternalChange = value => {
-    console.log("onExternalChange");
     //this.setState({ value });
   };
 
@@ -51,7 +50,7 @@ class App extends React.Component {
       iscorrectanswer:false,
       identifier: shortid.generate()
       };
-      console.log("addItem");
+
     this.setState(prevState => ({
         value: [...(prevState.value == null ? [] : prevState.value), defaultValue]
     }),function(){
@@ -62,7 +61,6 @@ class App extends React.Component {
 
   onChange(item,index){
     var newVal = Object.assign([...this.state.value], {[index]: item});
-    console.log("onChange");
     this.setState({
       value: newVal
     },function(){
@@ -74,7 +72,6 @@ class App extends React.Component {
   onRemove(index){
     var newVal = [...this.state.value];
     newVal.splice(index,1);
-    console.log("onRemove");
     this.setState({
       value: newVal
     },function(){
@@ -88,7 +85,7 @@ class App extends React.Component {
 
     newVal.splice(fromIndex, 1);
     newVal.splice(toIndex, 0, element);
-    console.log("onMove");
+
     this.setState({
       value: newVal
     },function(){
@@ -108,7 +105,6 @@ class App extends React.Component {
                   onMove={self.onMove.bind(self)}
               />;
   });
-  console.log("render",this.state.value);
   return (
     <>
       {fields}
