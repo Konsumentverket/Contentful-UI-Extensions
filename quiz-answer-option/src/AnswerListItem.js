@@ -15,16 +15,14 @@ class AnswerListItem extends Component {
             answer: this.props.item.answer,
             feedback: this.props.item.feedback,
             iscorrectanswer: this.props.item.iscorrectanswer,
+            identifier: this.props.item.identifier
         }
     }
 
     handleInputChange(event, field){ 
-        console.log(event.target.type);
         var state = this.state;
         state[field] = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-
         this.setState(state);
-
         this.props.onChange(state,this.props.index);
           
     }

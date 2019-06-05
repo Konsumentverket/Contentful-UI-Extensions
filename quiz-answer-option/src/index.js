@@ -37,17 +37,21 @@ class App extends React.Component {
   }
 
   onExternalChange = value => {
-    this.setState({ value });
+    console.log("onExternalChange");
+    //this.setState({ value });
   };
 
 
   addItem(){
+    var shortid = require('shortid');
+
     var defaultValue = {
       answer:"",
       feedback:"", 
-      iscorrectanswer:false
+      iscorrectanswer:false,
+      identifier: shortid.generate()
       };
-
+      console.log("addItem");
     this.setState(prevState => ({
         value: [...(prevState.value == null ? [] : prevState.value), defaultValue]
     }),function(){
@@ -58,7 +62,7 @@ class App extends React.Component {
 
   onChange(item,index){
     var newVal = Object.assign([...this.state.value], {[index]: item});
-
+    console.log("onChange");
     this.setState({
       value: newVal
     },function(){
@@ -70,6 +74,7 @@ class App extends React.Component {
   onRemove(index){
     var newVal = [...this.state.value];
     newVal.splice(index,1);
+    console.log("onRemove");
     this.setState({
       value: newVal
     },function(){
@@ -80,8 +85,10 @@ class App extends React.Component {
   onMove(fromIndex,toIndex){
     var newVal = [...this.state.value];
     var element = newVal[fromIndex];
+
     newVal.splice(fromIndex, 1);
     newVal.splice(toIndex, 0, element);
+    console.log("onMove");
     this.setState({
       value: newVal
     },function(){
@@ -95,13 +102,13 @@ class App extends React.Component {
     var fields = (this.state.value == null ? [] : this.state.value).map(function(e,i){
       return <AnswerListItem onChange={self.onChange.bind(self)} 
                   index={i} 
-                  key={i}
+                  key={e.identifier}
                   item={e}
                   onRemove={self.onRemove.bind(self)}
                   onMove={self.onMove.bind(self)}
               />;
   });
-
+  console.log("render",this.state.value);
   return (
     <>
       {fields}
