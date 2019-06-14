@@ -1,0 +1,10 @@
+{
+  "id": "Microcopy",
+  "name": "Microcopy",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Object"
+  ],
+  "parameters": {
+  }
+}

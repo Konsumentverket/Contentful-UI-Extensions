@@ -35,4 +35,7 @@ The use case is when you want to list something and you don't want to use conten
 }
 ```
 
+## Microcopy
+This extension is used to add Microcopy values without having to use Content or Contentmodels for adding microcopy texts.
+You define an area ex. 'Footer' and then define keys and values connected to the 'Footer'.
 
