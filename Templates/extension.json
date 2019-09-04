@@ -1,0 +1,20 @@
+{
+  "id": "Templates",
+  "name": "Templates",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Symbol"
+  ], 
+  "parameters": {
+    "installation": [
+      
+    ],
+    "instance": [{
+        "id": "helpText",
+        "type": "Symbol",
+        "name": "Help text",
+        "description": "Help text for a user to help them understand the editor"
+      }
+    ]
+  }
+}
