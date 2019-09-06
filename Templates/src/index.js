@@ -1,11 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import { SelectField, Option, Button } from '@contentful/forma-36-react-components';
+import { Button } from '@contentful/forma-36-react-components';
 import { init } from 'contentful-ui-extensions-sdk';
+import Promise from 'bluebird'
 import '@contentful/forma-36-react-components/dist/styles.css';
 import './index.css';
-import Promise from 'bluebird'
 
 class App extends React.Component {
 
@@ -30,8 +29,11 @@ class App extends React.Component {
       content_type: contentTypeName,
       'query':'[mall]'
     }).then(data => {
+      if (data.items.length === 0)
+        throw new Error('No entries')
+
       const arr = []
-      Object.entries(data.items[0].fields).map(([key, value]) => {
+      Object.entries(data.items[0].fields).forEach(([key, value]) => {
         arr.push({ key: key, value: value})
       })
 
@@ -43,7 +45,6 @@ class App extends React.Component {
               .then(result => {
                 if (result) {
                   this.state.api.entry.fields[key].setValue(this.removeMallFromString(value['en-US']))
-                  console.log('satte nytt varde')
                 }
                 resolve()
               })
@@ -54,7 +55,13 @@ class App extends React.Component {
         })
       })
     }).then(data => console.log(data))
-    .catch(e => console.log(e))
+    .catch(e => {
+      if (e.message === 'No entries') {
+        this.showErrorAlert()
+      } else {
+        console.log(e)
+      }
+    })
   }
 
   showDialog(key) {
@@ -64,8 +71,14 @@ class App extends React.Component {
         intent: 'positive',
         confirmLabel: 'Ja',
         cancelLabel: 'Nej'
-      }).then(result => result)
-      .catch(e => console.log(e))
+      })
+  }
+
+  showErrorAlert () {
+    this.state.api.dialogs.openAlert({
+      title: 'Fel',
+      message: 'Kunde inte hitta en mall',
+    }).catch(e => console.log(e))
   }
 
   removeMallFromString(str) {
