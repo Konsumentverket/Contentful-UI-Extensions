@@ -1,0 +1,8 @@
+{
+  "id": "ChildReferenceList",
+  "name": "ChildReferenceList",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Object"
+  ]
+}

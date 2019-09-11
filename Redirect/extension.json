@@ -1,0 +1,8 @@
+{
+  "id": "Redirect",
+  "name": "Redirect",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Symbol"
+  ]
+}
