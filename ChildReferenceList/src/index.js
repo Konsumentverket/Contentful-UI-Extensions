@@ -22,49 +22,68 @@ export class App extends React.Component {
     };
   }
 
+  asyncForEach = async (array, callback) => {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array)
+    }
+  }
+
   componentDidMount() {
     this.props.sdk.window.startAutoResizer();
 
     // Handler for external field value changes (e.g. when multiple authors are working on the same entry).
     this.detachExternalChangeHandler = this.props.sdk.field.onValueChanged(this.onExternalChange);
 
-    // Get linked entries
+    // Get entries that link to this entry
     init(extension => {
 
+      var defaultLocale = extension.locales.default;
       var stateItems = [...this.state.value];
       var currentItemIds = this.state.value.map(function (item) {
         return item.id;
       })
+      var fetchedItemIds = [];
 
-      console.log("Fetching children");
-
-      extension.space.getPublishedEntries({
-        content_type: 'seguePage',
-        'fields.parent.sys.id': extension.entry.getSys().id
+      extension.space.getEntries({
+        links_to_entry: extension.entry.getSys().id
       })
-        .then((data) => {
-          data.items.forEach(item => {
-            if (!currentItemIds.includes(item.sys.id)) {
-              stateItems.push({
-                'id': item.sys.id,
-                'title': item.fields.title
+        .then(async (data) => {
+          this.asyncForEach(data.items, async (item) => {
+
+            // Make sure the relation is as a child to this parent
+            let isTrueChild = item.fields.parent && item.fields.parent[defaultLocale].sys.id === extension.entry.getSys().id;
+
+            if (isTrueChild && !currentItemIds.includes(item.sys.id)) {
+              // Fetch content type name for items content type
+              await extension.space.getContentType(item.sys.contentType.sys.id).then(result => {
+
+                let contentTypeName = result.name;
+
+                stateItems.push({
+                  'id': item.sys.id,
+                  'contentType': { contentTypeName },
+                  'title': item.fields.title
+                });
+                currentItemIds.push(item.sys.id);
               });
-              currentItemIds.push(item.sys.id);
             }
             else {
-              console.log("Item already here...")
+              ;
             }
-          });
+            fetchedItemIds.push(item.sys.id);
+          }).then(() => {
+            // Cleanup - remove dead references. If it's not fetched it is no longer valid.
+            let filtered = stateItems.filter((val) => {
+              return fetchedItemIds.includes(val.id);
+            });
 
-          // Cleanup dead references
-          let filtered = stateItems.filter((val) => {
-            return currentItemIds.includes(val.id);
+            this.setState({
+              value: filtered
+            }, () => {
+              this.props.sdk.field.setValue(this.state.value);
+            });
           });
-
-          this.setState({
-            value: filtered
-          }, () => { this.props.sdk.field.setValue(this.state.value) });
-        });
+        })
     });
   }
 
@@ -104,15 +123,6 @@ export class App extends React.Component {
     })
   }
 
-  addItem(item) {
-    this.setState(prevState => ({
-      value: [...(prevState.value == null ? [] : prevState.value), item]
-    }), function () {
-      this.props.sdk.field.setValue(this.state.value);
-    });
-    return false;
-  }
-
   clearItems() {
     this.setState(({
       value: []
@@ -131,7 +141,7 @@ export class App extends React.Component {
           key={i}
           index={i}
           title={e.title.sv}
-          contentType="seguePage"
+          contentTypeName={e.contentType.contentTypeName}
           onMove={self.onMove.bind(self)}
         />);
     });

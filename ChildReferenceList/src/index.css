@@ -8,3 +8,17 @@ div {
   font: inherit;
   vertical-align: baseline;
 }
+
+.item {
+  overflow: hidden;
+}
+.item{
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.item .dragIcon{
+  position: absolute;
+  top: 35px;
+  left: 0px;
+}
