@@ -51,18 +51,16 @@ export class App extends React.Component {
           this.asyncForEach(data.items, async (item) => {
 
             // Make sure the relation is as a child to this parent
-            let isTrueChild = item.fields.parent && item.fields.parent[defaultLocale].sys.id === extension.entry.getSys().id;
-
+            let isTrueChild = item.fields.parentReference && item.fields.parentReference[defaultLocale].sys.id === extension.entry.getSys().id;
             if (isTrueChild && !currentItemIds.includes(item.sys.id)) {
               // Fetch content type name for items content type
               await extension.space.getContentType(item.sys.contentType.sys.id).then(result => {
 
                 let contentTypeName = result.name;
-
                 stateItems.push({
                   'id': item.sys.id,
                   'contentType': { contentTypeName },
-                  'title': item.fields.title
+                  'title': item.fields.heading
                 });
                 currentItemIds.push(item.sys.id);
               });
@@ -149,7 +147,7 @@ export class App extends React.Component {
     return (
       <>
         {items}
-        <TextLink text="Töm listan" icon={"Plus"} onClick={this.clearItems.bind(this)} />
+        <TextLink text="Töm listan" onClick={this.clearItems.bind(this)} />
       </>
     );
   }
