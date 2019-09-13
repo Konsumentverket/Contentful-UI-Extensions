@@ -1,0 +1,105 @@
+body {
+  min-height: 300px;
+  max-height: 400px;
+  background-color:#eef2f4;
+}
+html,
+body,
+div {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+.iconlist {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left:120px;
+  padding:0 30px;
+  background-color:#fff;
+  box-shadow: inset 7px 0 4px -7px rgba(0,0,0,0.4);
+}
+
+.icon {
+  width:80px;
+  cursor:pointer;
+  box-sizing:border-box;
+  margin-bottom:20px;
+  
+}
+
+.icon img {
+  max-width: 50px;
+  max-height: 50px;
+  display: block;
+  border:solid 1px #ccc;
+  border-radius:5px;
+  padding:2px;
+  margin:0 auto;
+}
+.icon span {
+  display: block;
+  text-align: center;
+  max-width: 80px;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+  font-size:14px;
+  color:rgb(83, 97, 113);
+}
+
+.icon:hover img{
+  background-color:#f1f1f1;
+  border-color: rgba(25, 40, 61, 0.616);
+
+}
+
+.icon--selected{
+position:fixed;
+top:35px;
+left:10px;
+background-color:inherit;
+border:none;
+width:100px;
+}
+
+.icon--selected img {
+  border:none;
+  max-width: 70px;
+  max-height: 70px;
+}
+
+.icon--selected span {
+  max-width: 100px
+}
+
+.icon--selected:hover img {
+  background:none;
+}
+
+.info {
+  position: fixed;
+  top:10px;
+  left:10px;
+  display: block;
+  width:100px;
+  max-width: 100px !important;
+  text-align: center;
+}
+
+.iconremove {
+  position: absolute;
+  bottom: 20px;
+  left:10px;
+  display: block;
+  width: 100px;
+  text-align: center;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+  font-size:14px;
+  color:rgb(83, 97, 113);
+  cursor: pointer;
+}
+.iconremove:hover {
+  text-decoration: underline;
+}
+

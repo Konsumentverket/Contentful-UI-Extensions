@@ -6,6 +6,11 @@
     "Object"
   ],
   "parameters": {
+    "installation": [{
+        "id": "IconExport",
+        "type": "Symbol",
+        "name": "https://raw.githubusercontent.com/Konsumentverket/Konsumentverket.github.io/master/designsystem/icons/"
+    }],
     "instance": [{
         "id": "helpText",
         "type": "Symbol",
