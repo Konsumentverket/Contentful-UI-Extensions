@@ -1,0 +1,8 @@
+{
+  "id": "IconSelector",
+  "name": "IconSelector",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Object"
+  ]
+}
