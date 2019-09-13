@@ -48,10 +48,11 @@ export class App extends React.Component {
         links_to_entry: extension.entry.getSys().id
       })
         .then(async (data) => {
+          console.log("Data: ", data);
           this.asyncForEach(data.items, async (item) => {
 
             // Make sure the relation is as a child to this parent
-            let isTrueChild = item.fields.parent && item.fields.parent[defaultLocale].sys.id === extension.entry.getSys().id;
+            let isTrueChild = item.fields.parentReference && item.fields.parentReference[defaultLocale].sys.id === extension.entry.getSys().id;
 
             if (isTrueChild && !currentItemIds.includes(item.sys.id)) {
               // Fetch content type name for items content type
@@ -149,7 +150,7 @@ export class App extends React.Component {
     return (
       <>
         {items}
-        <TextLink text="Töm listan" icon={"Plus"} onClick={this.clearItems.bind(this)} />
+        <TextLink text="Töm listan" icon={"Minus"} onClick={this.clearItems.bind(this)} />
       </>
     );
   }
