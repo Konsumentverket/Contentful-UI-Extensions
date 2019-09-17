@@ -20,6 +20,7 @@ div {
   padding:0 30px;
   background-color:#fff;
   box-shadow: inset 7px 0 4px -7px rgba(0,0,0,0.4);
+  min-height: 300px;
 }
 
 .icon {
@@ -38,6 +39,8 @@ div {
   border-radius:5px;
   padding:2px;
   margin:0 auto;
+  min-height: 60px;
+  min-width: 60px;
 }
 .icon span {
   display: block;
@@ -61,6 +64,7 @@ left:10px;
 background-color:inherit;
 border:none;
 width:100px;
+cursor:inherit;
 }
 
 .icon--selected img {
@@ -88,8 +92,8 @@ width:100px;
 }
 
 .iconremove {
-  position: absolute;
-  bottom: 20px;
+  position: fixed;
+  bottom:20px;
   left:10px;
   display: block;
   width: 100px;
