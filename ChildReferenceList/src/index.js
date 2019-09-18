@@ -56,12 +56,14 @@ export class App extends React.Component {
               // Fetch content type name for items content type
               await extension.space.getContentType(item.sys.contentType.sys.id).then(result => {
 
+                console.log({ item });
+
                 let contentType = result.name;
                 stateItems.push({
                   'id': item.sys.id,
                   'contentTypeName': contentType,
-                  'title': item.fields.heading[defaultLocale],
-                  'url': item.fields.url[defaultLocale]
+                  'title': item.fields.title[defaultLocale],
+                  'url': item.fields.url[defaultLocale],
                 });
                 currentItemIds.push(item.sys.id);
               });
