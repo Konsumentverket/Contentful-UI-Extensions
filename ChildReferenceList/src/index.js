@@ -56,11 +56,12 @@ export class App extends React.Component {
               // Fetch content type name for items content type
               await extension.space.getContentType(item.sys.contentType.sys.id).then(result => {
 
-                let contentTypeName = result.name;
+                let contentType = result.name;
                 stateItems.push({
                   'id': item.sys.id,
-                  'contentType': { contentTypeName },
-                  'title': item.fields.heading
+                  'contentTypeName': contentType,
+                  'title': item.fields.heading[defaultLocale],
+                  'url': item.fields.url[defaultLocale]
                 });
                 currentItemIds.push(item.sys.id);
               });
@@ -138,8 +139,8 @@ export class App extends React.Component {
         <ChildItem
           key={i}
           index={i}
-          title={e.title.sv}
-          contentTypeName={e.contentType.contentTypeName}
+          title={e.title}
+          contentTypeName={e.contentTypeName}
           onMove={self.onMove.bind(self)}
         />);
     });
