@@ -38,6 +38,7 @@ export class App extends React.Component {
     init(extension => {
 
       var defaultLocale = extension.locales.default;
+      var currentItemParentId = extension.entry.fields.parentReference && extension.entry.fields.parentReference.getValue().sys.id;
       var stateItems = [...this.state.value];
       var currentItemIds = this.state.value.map(function (item) {
         return item.id;
@@ -50,9 +51,14 @@ export class App extends React.Component {
         .then(async (data) => {
           this.asyncForEach(data.items, async (item) => {
 
+            // Check if this entrys parent is also a child and warn about it
+            currentItemParentId && item.sys.id === currentItemParentId && extension.notifier.error("Denna sidas 'Referens till föregående sida' finns även med som underliggande sida");
+
             // Make sure the relation is as a child to this parent
             let isTrueChild = item.fields.parentReference && item.fields.parentReference[defaultLocale].sys.id === extension.entry.getSys().id;
+
             if (isTrueChild && !currentItemIds.includes(item.sys.id)) {
+
               // Fetch content type name for items content type
               await extension.space.getContentType(item.sys.contentType.sys.id).then(result => {
                 let contentType = result.name;
