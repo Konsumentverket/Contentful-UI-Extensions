@@ -1,0 +1,16 @@
+{
+  "id": "IconSelector",
+  "name": "IconSelector",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Object"
+  ],
+  "parameters": {
+    "installation": [{
+        "id": "IconUrl",
+        "type": "Symbol",
+        "name":"icon base url",
+        "default": "https://raw.githubusercontent.com/Konsumentverket/Konsumentverket.github.io/master/designsystem/icons/"
+    }]
+  }
+}
