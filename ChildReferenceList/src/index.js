@@ -38,17 +38,22 @@ export class App extends React.Component {
     init(extension => {
 
       var defaultLocale = extension.locales.default;
-      var currentItemParentId = extension.entry.fields.parentReference && extension.entry.fields.parentReference.getValue().sys.id;
+      var currentItemParentId = extension.entry.fields.parentReference.getValue() && extension.entry.fields.parentReference.getValue().sys.id;
       var stateItems = [...this.state.value];
       var currentItemIds = this.state.value.map(function (item) {
         return item.id;
       })
       var fetchedItemIds = [];
 
+      console.log("fetching");
+
       extension.space.getEntries({
         links_to_entry: extension.entry.getSys().id
       })
         .then(async (data) => {
+
+          console.log({ data });
+
           this.asyncForEach(data.items, async (item) => {
 
             // Check if this entrys parent is also a child and warn about it
@@ -65,7 +70,7 @@ export class App extends React.Component {
                 stateItems.push({
                   'id': item.sys.id,
                   'contentTypeName': contentType,
-                  'title': item.fields.title[defaultLocale],
+                  'title': item.fields.title ? item.fields.title[defaultLocale] : item.fields.headline[defaultLocale],
                 });
                 currentItemIds.push(item.sys.id);
               });
