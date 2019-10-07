@@ -38,38 +38,45 @@ export class App extends React.Component {
     init(extension => {
 
       var defaultLocale = extension.locales.default;
+      var currentItemParentId = extension.entry.fields.parentReference.getValue() && extension.entry.fields.parentReference.getValue().sys.id;
       var stateItems = [...this.state.value];
       var currentItemIds = this.state.value.map(function (item) {
         return item.id;
       })
       var fetchedItemIds = [];
 
+      console.log("fetching");
+
       extension.space.getEntries({
         links_to_entry: extension.entry.getSys().id
       })
         .then(async (data) => {
-          console.log("Data: ", data);
+
+          console.log({ data });
+
           this.asyncForEach(data.items, async (item) => {
+
+            // Check if this entrys parent is also a child and warn about it
+            currentItemParentId && item.sys.id === currentItemParentId && extension.notifier.error("Denna sidas 'Referens till föregående sida' finns även med som underliggande sida");
 
             // Make sure the relation is as a child to this parent
             let isTrueChild = item.fields.parentReference && item.fields.parentReference[defaultLocale].sys.id === extension.entry.getSys().id;
 
             if (isTrueChild && !currentItemIds.includes(item.sys.id)) {
+
               // Fetch content type name for items content type
               await extension.space.getContentType(item.sys.contentType.sys.id).then(result => {
-
-                let contentTypeName = result.name;
-
+                let contentType = result.name;
                 stateItems.push({
                   'id': item.sys.id,
-                  'contentType': { contentTypeName },
-                  'title': item.fields.title
+                  'contentTypeName': contentType,
+                  'title': item.fields.title ? item.fields.title[defaultLocale] : item.fields.headline[defaultLocale],
                 });
                 currentItemIds.push(item.sys.id);
               });
             }
             else {
-              ;
+              ; // Empty
             }
             fetchedItemIds.push(item.sys.id);
           }).then(() => {
@@ -141,8 +148,8 @@ export class App extends React.Component {
         <ChildItem
           key={i}
           index={i}
-          title={e.title.sv}
-          contentTypeName={e.contentType.contentTypeName}
+          title={e.title}
+          contentTypeName={e.contentTypeName}
           onMove={self.onMove.bind(self)}
         />);
     });
@@ -150,7 +157,7 @@ export class App extends React.Component {
     return (
       <>
         {items}
-        <TextLink text="Töm listan" icon={"Minus"} onClick={this.clearItems.bind(this)} />
+        <TextLink text="Töm listan" onClick={this.clearItems.bind(this)} />
       </>
     );
   }

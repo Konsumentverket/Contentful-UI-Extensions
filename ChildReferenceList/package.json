@@ -1,7 +1,6 @@
 {
   "name": "ChildReferenceList",
   "version": "0.1.0",
-  "private": true,
   "devDependencies": {
     "@contentful/contentful-extension-scripts": "0.14.0",
     "@contentful/eslint-config-extension": "0.2.0",
