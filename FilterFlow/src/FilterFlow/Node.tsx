@@ -1,0 +1,34 @@
+import * as React from "react"
+import styled from 'styled-components'
+import { INodeInnerDefaultProps, INode } from "../ReactFlowChart";
+import { FlowContext, IOption, TypedNode } from "./FlowContext";
+
+import QuestionNode from "./QuestionNode";
+import ResultNode from "./ResultNode";
+
+export interface OptionProps {
+    id: string,
+    option: string,
+    portId: string
+}
+
+const Box = styled.div`
+    width: 300px;
+`
+
+
+const Node: React.FunctionComponent<INodeInnerDefaultProps> = (props) => {
+    const node = props.node as TypedNode;
+    var context = React.useContext(FlowContext)
+
+    var isResultNode = props.node.type == "input-only";
+
+    if(isResultNode){
+        return <ResultNode {...props} />
+    }
+    else{
+        return <QuestionNode {...props} />
+    }
+}
+
+export default Node;
