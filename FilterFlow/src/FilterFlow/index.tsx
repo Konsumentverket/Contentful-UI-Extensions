@@ -1,5 +1,5 @@
 import * as React from "react"
-import { FieldExtensionSDK } from "contentful-ui-extensions-sdk";
+import { DialogExtensionSDK } from "contentful-ui-extensions-sdk";
 import { IChart, FlowChart }  from '../ReactFlowChart'
 import Node from './Node';
 import Port from './Port';
@@ -10,16 +10,13 @@ import AddNodes from "./AddNodes";
 import config from "./misc/config";
 import Line from "./Line";
 import EditQuestion from "./EditQuestion";
+import SaveOrClose from "./SaveOrClose";
 
 
 interface FilterFlowProps {
-    sdk: FieldExtensionSDK;
+    sdk: DialogExtensionSDK;
     chart?: IChart;
 }
-
-var FlowWrapper = styled.div`
-    position: relative;
-`
 
 const FilterFlow: React.FunctionComponent<FilterFlowProps> = (props) => {
     return <div>
@@ -40,6 +37,7 @@ const FilterFlow: React.FunctionComponent<FilterFlowProps> = (props) => {
                         callbacks={context.defaultCallbacks}
                     />
                     <AddNodes />
+                    <SaveOrClose />
                 </>
             }
             </FlowContext.Consumer>

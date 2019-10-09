@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
-import { FieldExtensionSDK } from "contentful-ui-extensions-sdk";
+import { DialogExtensionSDK } from "contentful-ui-extensions-sdk";
 import { IChart, IFlowChartCallbacks, INode, IPort } from "../ReactFlowChart";
 import { defaultChart } from "./defaultChart";
 import defaultCallbacks from "./defaultCallbackWrapper";
 import { v4 } from 'uuid'
+import { Modal, Button } from "@contentful/forma-36-react-components";
 
 interface FilterFlowContextProps {
     children?: React.ReactNode;
-    sdk: FieldExtensionSDK;
+    sdk: DialogExtensionSDK;
     chart?: IChart;
   }
 
@@ -19,6 +20,14 @@ export interface IOption {
     order:number
 }
 
+interface IModal {
+    title: string,
+    content: string,
+    onClose: Function,
+}
+export type IOnModal = (title:string,content:string,onClose:Function) => void
+
+
 export interface IExtFlowChartCallbacks extends IFlowChartCallbacks{
     onPortClick: (portId:string) => void
 }
@@ -28,6 +37,7 @@ type ContextProps = {
     defaultCallbacks: IExtFlowChartCallbacks,
     editingOption: IOption | null | undefined,
     editingNodeQuestion: INode | null | undefined,
+    sdk: DialogExtensionSDK
 
     //function
     addPort: (node:INode) => void,
@@ -39,6 +49,7 @@ type ContextProps = {
     changeOptionsSort: (moved:string,to:string,nodeId:string) => void,
     removeOption: (nodeId:string,optionId:string) => void;
     openResultEntryDialog: () => void;
+    showModal: IOnModal
 };
 
 export interface TypedNode extends INode {
@@ -50,17 +61,29 @@ export interface TypedNode extends INode {
 
 export const FlowContext = React.createContext({} as ContextProps);
 
-export const PortColors = ["#CCCC00", "#9966CC", "#20B2AA","#E52B50", "#CD853F", "#00A86B", "#8B4513"]
+export const PortColors = ["#b3b300", "#9966CC", "#188781","#c5183b", "#CD853F", "#00422a", "#8B4513"]
 
 export const FilterFlowContext: React.FunctionComponent<FilterFlowContextProps> = (props) => {
 
     const [chart,setChart] = React.useState(props.chart || defaultChart)
     const [editingOption, setEditingOption] = React.useState<IOption | null>();
     const [editingNodeQuestion, setEditingNodeQuestion] = React.useState<INode | null>();
+    const [modal, setModal] = React.useState<IModal | null>();
+    
     const setChartCallback = (newChart:IChart) => {
         setChart(Object.assign({},newChart));
     }
-    const [callbacks] = React.useState(defaultCallbacks({chart,callback:setChartCallback, sdk: props.sdk}))
+    const showModal = (title:string,content:string,onClose:Function) =>{
+        setModal({
+            title,
+            content,
+            onClose,
+            
+        })
+    }
+
+
+    const [callbacks] = React.useState(defaultCallbacks({chart,callback:setChartCallback,modal:showModal, sdk: props.sdk}))
 
     //ADD PORT
     const addPort = (node:INode) => {
@@ -123,6 +146,8 @@ export const FilterFlowContext: React.FunctionComponent<FilterFlowContextProps> 
         props.sdk.dialogs.selectSingleEntry().then((e)=> console.log(e))
     }
 
+    
+
     return <FlowContext.Provider value={{
         chart: chart,
         defaultCallbacks: callbacks,
@@ -136,8 +161,37 @@ export const FilterFlowContext: React.FunctionComponent<FilterFlowContextProps> 
         saveNodeQuestion: saveNodeQuestion,
         changeOptionsSort: changeOptionsSort,
         removeOption: removeOption,
-        openResultEntryDialog: openResultEntryDialog
+        openResultEntryDialog: openResultEntryDialog,
+        showModal: showModal,
+        sdk: props.sdk
     }}>
+        {modal == null ? null :
+            <Modal title={modal.title} 
+                onClose={(e:any) => {
+                    setModal(null);
+                    modal.onClose(e)
+                }} 
+                isShown={modal != null}
+            >
+                <>
+                <Modal.Content>{modal == null ? "" : modal.content}</Modal.Content>
+                <Modal.Controls>
+                    <Button onClick={(e:any) => {
+                        setModal(null);
+                        modal.onClose(true)
+                    }} buttonType="positive">
+                        Ja
+                    </Button>
+                    <Button onClick={(e:any) => {
+                        setModal(null);
+                        modal.onClose(false)
+                    }} buttonType="muted">
+                        Nej
+                    </Button>
+                </Modal.Controls>
+                </>
+            </Modal>
+        }
         {props.children}
     </FlowContext.Provider>
 }

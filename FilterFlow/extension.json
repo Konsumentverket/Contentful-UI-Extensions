@@ -3,7 +3,6 @@
   "name": "FilterFlow",
   "srcdoc": "./build/index.html",
   "fieldTypes": [
-    "Object",
-    "Entries"
+    "Object"
   ]
 }

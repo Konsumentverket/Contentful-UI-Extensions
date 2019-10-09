@@ -17,6 +17,7 @@ var Wrapper = styled.div`
         display: flex;
         justify-content: center;
         color: #fff;
+        user-select: none;
         &:hover {
             opacity: .75;
         }
@@ -31,12 +32,13 @@ const Port: React.FunctionComponent<IPortDefaultProps> = (props) => {
     var context = React.useContext(FlowContext)
     React.useLayoutEffect(() => {
         setPortPosition({chart:context.chart, portPositionChange:context.defaultCallbacks.onPortPositionChange,port:props.port});
-    },[])
+    })
 
     var portSelected = context.chart.selected && context.chart.selected.type == "port" && context.chart.selected.id == props.port.id;
 
     return <Wrapper data-portid={props.port.id} className={portSelected ? "selected": ""} color={props.port.properties.color} onClick={(e) => {
         e.stopPropagation();
+        if(props.port.type == "input") return;
         context.defaultCallbacks.onPortClick(props.port.id)
     }}>
         {props.port.properties.index == 0 ? null : <span>#{props.port.properties.index}</span>}

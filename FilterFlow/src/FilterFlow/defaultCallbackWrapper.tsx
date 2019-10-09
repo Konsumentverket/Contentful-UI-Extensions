@@ -1,11 +1,11 @@
 import { IFlowChartCallbacks, IChart } from "../ReactFlowChart";
 import { onDragNode, onLinkStart, onLinkMove, onLinkComplete, onLinkCancel, onPortPositionChange, onLinkMouseEnter, onLinkMouseLeave, onLinkClick, onCanvasClick, onDeleteKey, onNodeClick, onNodeSizeChange, onCanvasDrop } from "../ReactFlowChart/container/actions";
-import { FieldExtensionSDK, OpenConfirmOptions } from "contentful-ui-extensions-sdk";
-import { TypedNode, PortColors, IExtFlowChartCallbacks } from "./FlowContext";
+import { FieldExtensionSDK } from "contentful-ui-extensions-sdk";
+import { TypedNode, PortColors, IExtFlowChartCallbacks, IOnModal } from "./FlowContext";
 
-type defaultCallbackInputs = (input: {chart:IChart, callback:any, sdk: FieldExtensionSDK}) => IExtFlowChartCallbacks ;
+type defaultCallbackInputs = (input: {chart:IChart, callback:any,modal:IOnModal, sdk: FieldExtensionSDK}) => IExtFlowChartCallbacks ;
 
-const defaultCallbacks : defaultCallbackInputs  = ({chart,callback, sdk}) => {
+const defaultCallbacks : defaultCallbackInputs  = ({chart,callback,modal, sdk}) => {
     return {
         onDragNode: (args) => { 
             var updateChart = onDragNode(args) as any;
@@ -53,30 +53,39 @@ const defaultCallbacks : defaultCallbackInputs  = ({chart,callback, sdk}) => {
             callback(updateChart(chart));
         },
         onDeleteKey: (args) => {
-            var updateChart = onDeleteKey(args) as any
 
-            if(chart.selected.type == "port"){
-                Object.values(chart.nodes).forEach(node => {
-                    var typednode = node as TypedNode;
-                    var selected = Object.values(node.ports).filter(x => x.id == chart.selected.id);
-                    if(selected.length == 1){
-                        delete typednode.ports[chart.selected.id!]
-                    }
-                    Object.values(node.ports).forEach((p,i) => { 
-                        p.properties.index = ++i
-                        p.properties.color = PortColors[i]
-                    });
+            if(chart.selected.type == "node" && chart.selected.id == "start") return;
 
 
-                    var optionsToRemove = Object.values(typednode.properties.options).filter(x => x.portId == chart.selected.id)
-                    optionsToRemove.forEach(x => delete typednode.properties.options[x.id]);
+            modal("Är du säker på att du vill plocka bort elementet?",
+                "Detta går inte att ångra",(e:any) => {
+                if(!e) return;
+                var updateChart = onDeleteKey(args) as any
+                if(chart.selected.type == "port"){
+                    Object.values(chart.nodes).forEach(node => {
+                        var typednode = node as TypedNode;
+                        var selected = Object.values(node.ports).filter(x => x.id == chart.selected.id);
+                        if(selected.length == 1){
+                            delete typednode.ports[chart.selected.id!]
+                            Object.values(node.ports).forEach((p,i) => { 
+                                p.properties.color = PortColors[i]
+                                p.properties.index = (i + 1)
+                                p.position = undefined;
+                            });
+                            var optionsToRemove = Object.values(typednode.properties.options).filter(x => x.portId == chart.selected.id)
+                            optionsToRemove.forEach(x => delete typednode.properties.options[x.id]);
+    
+                            var linesToRemove = Object.values(chart.links).filter(x => x.from.portId == chart.selected.id)
+                            linesToRemove.forEach(x => delete chart.links[x.id]);
+                        }
+    
+                    })
+                }
+                callback(updateChart(chart));          
 
-                    var linesToRemove = Object.values(chart.links).filter(x => x.from.portId == chart.selected.id)
-                    linesToRemove.forEach(x => delete chart.links[x.id]);
+            });
 
-                })
-            }
-            callback(updateChart(chart));            
+            
             
         },
         onNodeClick: (args) => {

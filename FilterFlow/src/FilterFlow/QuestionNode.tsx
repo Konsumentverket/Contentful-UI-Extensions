@@ -24,7 +24,8 @@ const QuestionContainer = styled.div`
     padding: 10px;
     min-height: 10px;
     position: relative;
-
+    user-select: none;
+    text-shadow: 0px 0px 1px #000000;
 
     .editQuestion{
         position: absolute;
@@ -101,10 +102,15 @@ const QuestionNode: React.FunctionComponent<INodeInnerDefaultProps> = (props) =>
                     }}
                 />
                 : null}
-            
-            <IconButton iconProps={{ icon: "Link" }} className="addLink" label="Lägg till länk" onClick={() => {
-                context.addPort(node);
-            }} />
+            {
+
+            Object.keys(node.ports).length > 6 ? 
+                null 
+                :
+                <IconButton iconProps={{ icon: "Link" }} className="addLink" label="Lägg till länk" onClick={() => {
+                    context.addPort(node);
+                }} />
+            }
         
             {/* OPTIONS */}
             {Object.values(node.properties.options).sort((a, b) => a.order - b.order).map((option) => {

@@ -18,11 +18,7 @@ const Box = styled.div`
 
 
 const Node: React.FunctionComponent<INodeInnerDefaultProps> = (props) => {
-    const node = props.node as TypedNode;
-    var context = React.useContext(FlowContext)
-
     var isResultNode = props.node.type == "input-only";
-
     if(isResultNode){
         return <ResultNode {...props} />
     }

@@ -3,7 +3,6 @@ import { IConfig, IChart, IOnLinkCompleteInput } from "../../ReactFlowChart";
 
 
 const config: IConfig =  {
-    snapToGrid: true,
     validateLink : ({ linkId, fromNodeId, fromPortId, toNodeId, toPortId, chart })=>{
         if(toNodeId == "start") return false;
         var fromNode = chart.nodes[fromNodeId]

@@ -19,7 +19,7 @@ const AddNodesWrapper = styled.div`
     z-index: 2;
     width: 100%;
     min-height: 50px;
-    padding 10px;
+    padding: 10px;
     display: flex;
     box-shadow: 0px 0px 10px #888;
     

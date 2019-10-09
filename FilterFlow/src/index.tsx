@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Button } from '@contentful/forma-36-react-components';
-import { init, FieldExtensionSDK,locations } from 'contentful-ui-extensions-sdk';
+import { init, FieldExtensionSDK,locations, DialogExtensionSDK } from 'contentful-ui-extensions-sdk';
 import '@contentful/forma-36-react-components/dist/styles.css';
 import './index.css';
 import FilterFlow from './FilterFlow'
 import { ADDRGETNETWORKPARAMS } from 'dns';
+import { IChart } from './ReactFlowChart';
 
 interface AppProps {
-  sdk: FieldExtensionSDK;
+  sdk: FieldExtensionSDK | DialogExtensionSDK;
 }
 
 interface AppState {
@@ -19,8 +20,9 @@ export class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
     if(this.props.sdk.location.is(locations.LOCATION_ENTRY_FIELD)){
+      var api = props.sdk as FieldExtensionSDK;
       this.state = {
-        value: props.sdk.field.getValue() || ''
+        value: api.field.getValue() || ''
       };
     }
   }
@@ -31,7 +33,8 @@ export class App extends React.Component<AppProps, AppState> {
     this.props.sdk.window.startAutoResizer();
 
     if(this.props.sdk.location.is(locations.LOCATION_ENTRY_FIELD)){
-      this.detachExternalChangeHandler = this.props.sdk.field.onValueChanged(this.onExternalChange);
+      var api = this.props.sdk as FieldExtensionSDK;
+      this.detachExternalChangeHandler = api.field.onValueChanged(this.onExternalChange);
     }
   }
 
@@ -45,23 +48,13 @@ export class App extends React.Component<AppProps, AppState> {
     this.setState({ value });
   };
 
-  onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value;
-    this.setState({ value });
-    if (value) {
-      await this.props.sdk.field.setValue(value);
-    } else {
-      await this.props.sdk.field.removeValue();
-    }
-  };
 
   render = () => {
     
     if(this.props.sdk.location.is(locations.LOCATION_DIALOG)){
-
-        console.log("frameElement",window.parent);
-
-        return <FilterFlow sdk={this.props.sdk} />
+        var dialogSdk = this.props.sdk as DialogExtensionSDK
+        var invocation = dialogSdk.parameters.invocation as any
+        return <FilterFlow sdk={dialogSdk} chart={invocation.value} />
     }
     else{
       return (
@@ -75,7 +68,13 @@ export class App extends React.Component<AppProps, AppState> {
             }
           })
           .then(data => {
-            console.log(data);
+            if(data){
+              var api = this.props.sdk as FieldExtensionSDK
+              api.field.setValue(data);
+              this.setState({
+                value: data
+              })
+            }
           })
         }}>Öppna filterbyggaren</Button>
         );
@@ -91,6 +90,6 @@ init(sdk => {
  * By default, iframe of the extension is fully reloaded on every save of a source file.
  * If you want to use HMR (hot module reload) instead of full reload, uncomment the following lines
  */
-if (module.hot) {
-  module.hot.accept();
-}
+// if (module.hot) {
+//   module.hot.accept();
+// }

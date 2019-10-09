@@ -74,6 +74,12 @@ const EditOption: React.FunctionComponent = () => {
     const [text, setText] = React.useState(context.editingOption!.text)
     const node = context.chart.nodes[nodeId];
 
+    const optionRef = React.createRef<HTMLInputElement>();
+    React.useEffect(() => {
+        if(optionRef.current != null)
+            optionRef.current.focus()
+    },[])
+
 
     var port = null;
     if(portId){
@@ -84,7 +90,7 @@ const EditOption: React.FunctionComponent = () => {
 
     return <EditOptionsContainer>
         <h2>Redigera alternativ för: {node.properties.question}</h2>
-        <TextInput id="text" name="text" width="full" placeholder="Alternativ" value={text} onChange={(e)=> {
+        <TextInput id="text" name="text" width="full" inputRef={optionRef} placeholder="Alternativ" value={text} onChange={(e)=> {
             setText(e.target.value);
         }} />
 
