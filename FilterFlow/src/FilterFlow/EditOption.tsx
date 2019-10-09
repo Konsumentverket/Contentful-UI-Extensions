@@ -1,7 +1,6 @@
 import * as React from "react"
 import styled from 'styled-components'
-import { OptionProps } from "./Node"
-import { IconButton, TextField, TextInput, FormLabel, Dropdown, DropdownListItem, DropdownList, Button } from "@contentful/forma-36-react-components"
+import { TextInput, Dropdown, DropdownListItem, DropdownList, Button, TextLink } from "@contentful/forma-36-react-components"
 import { FlowContext } from "./FlowContext"
 import { IPort } from "../ReactFlowChart"
 
@@ -93,6 +92,8 @@ const EditOption: React.FunctionComponent = () => {
         <TextInput id="text" name="text" width="full" inputRef={optionRef} placeholder="Alternativ" value={text} onChange={(e)=> {
             setText(e.target.value);
         }} />
+
+        <TextLink onClick={() => {console.log("taxanomi värde")}} className="explanation" icon={"Link"}>Välj taxanomi värde?</TextLink>
 
         <Dropdown isOpen={dropdownOpen} 
             toggleElement={<Button 

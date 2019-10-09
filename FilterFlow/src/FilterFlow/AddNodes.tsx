@@ -31,6 +31,7 @@ const QuestionNodeDraggable = styled.div`
     height: 50px;
     border: 1px solid #888;
     border-radius: 5px;
+    cursor: grab;
 
     &:before{
         content: "Fråga";
@@ -52,6 +53,7 @@ const ResultNodeDraggable = styled.div`
     border: 1px solid #888;
     border-radius: 5px;
     margin-left: 40px;
+    cursor: grab;
 
     &:before{
         content: "Resultat";
