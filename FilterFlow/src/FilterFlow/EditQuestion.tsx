@@ -2,7 +2,6 @@ import { FlowContext } from "./FlowContext";
 import React from "react";
 import styled from "styled-components";
 import { TextInput, Button, TextLink } from "@contentful/forma-36-react-components";
-import { INode } from "../ReactFlowChart";
 
 const EditQuestionContainer = styled.div`
 
@@ -19,7 +18,7 @@ const EditQuestionContainer = styled.div`
     box-shadow: 0px 0px 10px #888;
 
 
-    .explanation{
+    .entrylink{
         margin-top: 10px;
     }
 
@@ -50,8 +49,8 @@ const EditQuestion: React.FunctionComponent = () => {
         <TextInput id="text" name="text" width="full" inputRef={questionRef} placeholder="Alternativ" value={text} onChange={(e)=> {
             setText(e.target.value);
         }} />
-        <TextLink onClick={() => {console.log("aasdasdasd")}} className="explanation" icon={"Link"}>Välj förklaringstext</TextLink>
-
+        <TextLink onClick={() => {console.log("förklaringstext")}} className="entrylink" icon={"Link"}>Välj förklaringstext</TextLink>
+        <TextLink onClick={() => {console.log("taxanomi")}} className="entrylink" icon={"Link"}>Välj taxanomi?</TextLink>
 
         <ActionsWrapper>
         <Button buttonType="positive" className="save" onClick={
