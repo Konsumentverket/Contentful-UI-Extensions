@@ -2,7 +2,6 @@ import { FlowContext } from "./FlowContext";
 import React from "react";
 import styled from "styled-components";
 import { TextInput, Button, TextLink } from "@contentful/forma-36-react-components";
-import { INode } from "../ReactFlowChart";
 
 const EditQuestionContainer = styled.div`
 
