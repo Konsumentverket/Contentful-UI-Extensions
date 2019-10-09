@@ -153,7 +153,10 @@ class App extends React.Component {
                   key={key}
                   className="tab"
                   selected={this.state.selectedTab == key || (this.state.selectedTab == null && i == 0)}
-                  onSelect={() => this.setState({selectedTab: key})}
+                  onSelect={() => this.setState({
+                    selectedTab: key,
+                    newlyCreatedMicrocopys: []
+                  })}
               >
                 <Tag tagType="secondary">{key}</Tag>
               </Tab>

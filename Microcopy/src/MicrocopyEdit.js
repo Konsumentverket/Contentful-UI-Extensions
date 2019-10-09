@@ -39,7 +39,7 @@ class MicrocopyEdit extends Component {
             </span>
             <Icon icon="Code" className="codeconnection" />
             <span className="field"><Pill label="Text:" />
-            <TextInput className={"microcopyvalue"} 
+            <TextInput className={"microcopyvalue large"} 
                 value={this.state.value.value}
                 width="large"
                 disabled={!this.state.editmode}
@@ -48,7 +48,7 @@ class MicrocopyEdit extends Component {
             </span>
 
             {this.state.editmode ?
-                    <Icon icon="ThumbUp" onClick={()=> this.setState({editmode: false})} /> 
+                        <Icon icon="ThumbUp" onClick={()=> this.setState({editmode: false})} /> 
                     :
                     <>
                         <Icon icon="Edit" onClick={()=> this.setState({editmode: true})} />
