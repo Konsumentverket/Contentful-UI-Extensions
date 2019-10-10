@@ -1,8 +1,8 @@
 import * as React from "react"
 import styled from 'styled-components'
 import F36Tokens from '@contentful/forma-36-tokens';
-import { IconButton, Icon } from '@contentful/forma-36-react-components'
-import { INodeInnerDefaultProps, INode } from "../ReactFlowChart";
+import { IconButton } from '@contentful/forma-36-react-components'
+import { INodeInnerDefaultProps } from "../ReactFlowChart";
 import { FlowContext, IOption, TypedNode } from "./FlowContext";
 import { v4 } from 'uuid';
 
@@ -60,7 +60,7 @@ const OptionContainer = styled.div`
 
 const Option = styled.a`
     padding: 2px 5px 3px 5px;
-    margin: 3px 0 0 3px;
+    margin: 6px 0;
     font-size: 13px;
     max-height: 19px;
     color: #fff;

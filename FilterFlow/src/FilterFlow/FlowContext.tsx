@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { DialogExtensionSDK } from "contentful-ui-extensions-sdk";
-import { IChart, IFlowChartCallbacks, INode, IPort } from "../ReactFlowChart";
+import { IChart, IFlowChartCallbacks, INode } from "../ReactFlowChart";
 import { defaultChart } from "./defaultChart";
 import defaultCallbacks from "./defaultCallbackWrapper";
 import { v4 } from 'uuid'

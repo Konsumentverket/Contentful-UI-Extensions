@@ -5,7 +5,6 @@ import Node from './Node';
 import Port from './Port';
 import { FilterFlowContext, FlowContext } from "./FlowContext";
 import EditOption from "./EditOption";
-import styled from "styled-components";
 import AddNodes from "./AddNodes";
 import config from "./misc/config";
 import Line from "./Line";

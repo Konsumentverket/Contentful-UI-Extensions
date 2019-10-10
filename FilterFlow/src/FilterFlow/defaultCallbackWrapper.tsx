@@ -1,9 +1,9 @@
-import { IFlowChartCallbacks, IChart } from "../ReactFlowChart";
+import { IChart } from "../ReactFlowChart";
 import { onDragNode, onLinkStart, onLinkMove, onLinkComplete, onLinkCancel, onPortPositionChange, onLinkMouseEnter, onLinkMouseLeave, onLinkClick, onCanvasClick, onDeleteKey, onNodeClick, onNodeSizeChange, onCanvasDrop } from "../ReactFlowChart/container/actions";
-import { FieldExtensionSDK } from "contentful-ui-extensions-sdk";
+import { DialogExtensionSDK } from "contentful-ui-extensions-sdk";
 import { TypedNode, PortColors, IExtFlowChartCallbacks, IOnModal } from "./FlowContext";
 
-type defaultCallbackInputs = (input: {chart:IChart, callback:any,modal:IOnModal, sdk: FieldExtensionSDK}) => IExtFlowChartCallbacks ;
+type defaultCallbackInputs = (input: {chart:IChart, callback:any,modal:IOnModal, sdk: DialogExtensionSDK}) => IExtFlowChartCallbacks ;
 
 const defaultCallbacks : defaultCallbackInputs  = ({chart,callback,modal, sdk}) => {
     return {

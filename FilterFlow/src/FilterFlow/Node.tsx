@@ -1,7 +1,6 @@
 import * as React from "react"
 import styled from 'styled-components'
-import { INodeInnerDefaultProps, INode } from "../ReactFlowChart";
-import { FlowContext, IOption, TypedNode } from "./FlowContext";
+import { INodeInnerDefaultProps } from "../ReactFlowChart";
 
 import QuestionNode from "./QuestionNode";
 import ResultNode from "./ResultNode";

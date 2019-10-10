@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { INodeInnerDefaultProps } from "../ReactFlowChart";
 import F36Tokens from '@contentful/forma-36-tokens';
 import { FlowContext } from "./FlowContext";
-import { Button, Icon, TextLink } from "@contentful/forma-36-react-components";
+import { Icon, TextLink } from "@contentful/forma-36-react-components";
 
 export interface OptionProps {
     id: string,
