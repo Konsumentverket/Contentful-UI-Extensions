@@ -40,7 +40,12 @@ export class App extends React.Component {
 
   onExternalChange = value => {
     console.log("Ext.Changed!", value)
-    this.setState({ value });
+    if (value === undefined) {
+      this.setState({ value: true }, () => this.props.sdk.field.setValue(this.state.value));
+    } else {
+      this.setState({ value });
+    }
+
   };
 
   onChange = e => {
