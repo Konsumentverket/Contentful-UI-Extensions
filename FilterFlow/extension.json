@@ -4,5 +4,31 @@
   "srcdoc": "./build/index.html",
   "fieldTypes": [
     "Object"
-  ]
+  ],
+  "parameters": {
+    "instance": [{
+        "id": "helpText",
+        "type": "Symbol",
+        "name": "Help text",
+        "description": "Help text for a user to help them understand the editor"
+      },{
+        "id":"resultEntrys",
+        "name": "Type of result entrys",
+        "type": "Symbol",
+        "required": true
+      },
+      {
+        "id":"explanationEntrys",
+        "name": "Type of explanation entrys",
+        "type": "Symbol",
+        "required": true
+      },
+      {
+        "id":"taxonomyEntrys",
+        "name": "Type of taxonomy entrys",
+        "type": "Symbol",
+        "required": true
+      }
+    ]
+  }
 }

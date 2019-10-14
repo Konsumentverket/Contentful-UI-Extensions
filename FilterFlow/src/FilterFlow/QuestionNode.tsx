@@ -1,7 +1,7 @@
 import * as React from "react"
 import styled from 'styled-components'
 import F36Tokens from '@contentful/forma-36-tokens';
-import { IconButton } from '@contentful/forma-36-react-components'
+import { IconButton, Icon } from '@contentful/forma-36-react-components'
 import { INodeInnerDefaultProps } from "../ReactFlowChart";
 import { FlowContext, IOption, TypedNode } from "./FlowContext";
 import { v4 } from 'uuid';
@@ -14,6 +14,7 @@ export interface OptionProps {
 
 const Box = styled.div`
     width: 300px;
+    position:relative;
 `
 const QuestionContainer = styled.div`
     background-color: ${F36Tokens.colorBlueLight};
@@ -70,6 +71,7 @@ const Option = styled.a`
 
 
 
+
 const QuestionNode: React.FunctionComponent<INodeInnerDefaultProps> = (props) => {
     const node = props.node as TypedNode;
     var context = React.useContext(FlowContext)
@@ -89,14 +91,15 @@ const QuestionNode: React.FunctionComponent<INodeInnerDefaultProps> = (props) =>
                 e.stopPropagation();
             }}
         >
-            {Object.keys(node.ports).length > 0 ?
+            {Object.values(node.ports).filter(x => x.type == "output").length > 0 ?
                 <IconButton iconProps={{ icon: "PlusCircle" }}
                     className="addOptions" label="Lägg till alternativ"
                     onClick={() => {
                         const option: IOption = {
                             id: v4(),
                             nodeId: node.id,
-                            order: Object.keys(node.properties.options).length + 1
+                            order: Object.keys(node.properties.options).length + 1,
+                            taxonomiSubLevel: null
                         }
                         context.editOption(option)
                     }}

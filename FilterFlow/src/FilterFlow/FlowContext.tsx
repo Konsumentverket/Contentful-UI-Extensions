@@ -17,7 +17,8 @@ export interface IOption {
     text?:string; 
     portId?:string;
     nodeId:string;
-    order:number
+    order:number;
+    taxonomiSubLevel: any;
 }
 
 interface IModal {
@@ -48,7 +49,10 @@ type ContextProps = {
     saveNodeQuestion: (node:INode) => void,
     changeOptionsSort: (moved:string,to:string,nodeId:string) => void,
     removeOption: (nodeId:string,optionId:string) => void;
-    openResultEntryDialog: () => void;
+    openResultEntryDialog: (nodeId:string) => void;
+    removeNodeEntry: (nodeId:string,entrykey:string) => void;
+    openNodeExplanationTextEntryDialog: (callback:Function) => void;
+    openNodeTaxonomiEntryDialog:  (callback:Function) => void;
     showModal: IOnModal
 };
 
@@ -135,17 +139,50 @@ export const FilterFlowContext: React.FunctionComponent<FilterFlowContextProps> 
     }
 
     const editNodeQuestion = (node:INode | null) => {
-        setEditingNodeQuestion(node);
+        setEditingNodeQuestion(node)
     }
     const saveNodeQuestion = (node:INode) => {
         chart.nodes[node.id] = node;
         setChart(Object.assign({},chart));
         setEditingNodeQuestion(null);
     }
-    const openResultEntryDialog = () => {
-        props.sdk.dialogs.selectSingleEntry().then((e)=> console.log(e))
+    const openResultEntryDialog = (nodeId:string) => {
+        var resultEntryStr = (props.sdk.parameters.invocation as any).resultEntrys as string;
+        var resultEntrys = resultEntryStr.split(",");
+        props.sdk.dialogs.selectSingleEntry({
+            contentTypes: resultEntrys
+        }).then((entry)=> {
+            if(entry == null) return;
+            chart.nodes[nodeId].properties.entry = (entry as any).sys
+            setChart(Object.assign({},chart))
+        })
+    }
+    const removeNodeEntry = (nodeId:string,entryKey:string) => {
+        chart.nodes[nodeId].properties[entryKey] = null
+        setChart(Object.assign({},chart))
     }
 
+    const openNodeExplanationTextEntryDialog = (callback:Function) => {
+        var explanationEntrysStr = (props.sdk.parameters.invocation as any).explanationEntrys as string;
+        var explanationEntrys = explanationEntrysStr.split(",");
+        props.sdk.dialogs.selectSingleEntry({
+            contentTypes: explanationEntrys
+        }).then((entry) => {
+            if(entry == null) return;
+            callback(entry)
+        })
+    }
+
+    const openNodeTaxonomiEntryDialog = (callback:Function) => {
+        var taxonomyEntrysStr = (props.sdk.parameters.invocation as any).taxonomyEntrys as string;
+        var taxonomyEntrys = taxonomyEntrysStr.split(",");
+        props.sdk.dialogs.selectSingleEntry({
+            contentTypes: taxonomyEntrys
+        }).then((entry) => {
+            if(entry == null) return;
+            callback(entry)
+        })
+    }
     
 
     return <FlowContext.Provider value={{
@@ -162,7 +199,10 @@ export const FilterFlowContext: React.FunctionComponent<FilterFlowContextProps> 
         changeOptionsSort: changeOptionsSort,
         removeOption: removeOption,
         openResultEntryDialog: openResultEntryDialog,
+        removeNodeEntry: removeNodeEntry,
         showModal: showModal,
+        openNodeExplanationTextEntryDialog: openNodeExplanationTextEntryDialog,
+        openNodeTaxonomiEntryDialog: openNodeTaxonomiEntryDialog,
         sdk: props.sdk
     }}>
         {modal == null ? null :

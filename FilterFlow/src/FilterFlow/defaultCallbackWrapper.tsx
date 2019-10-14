@@ -1,5 +1,5 @@
 import { IChart } from "../ReactFlowChart";
-import { onDragNode, onLinkStart, onLinkMove, onLinkComplete, onLinkCancel, onPortPositionChange, onLinkMouseEnter, onLinkMouseLeave, onLinkClick, onCanvasClick, onDeleteKey, onNodeClick, onNodeSizeChange, onCanvasDrop } from "../ReactFlowChart/container/actions";
+import { onDragNode, onLinkStart, onLinkMove, onLinkComplete, onLinkCancel, onPortPositionChange, onLinkMouseEnter, onLinkMouseLeave, onLinkClick, onCanvasClick, onDeleteKey, onNodeClick, onNodeSizeChange, onCanvasDrop, onDragCanvas } from "../ReactFlowChart/container/actions";
 import { DialogExtensionSDK } from "contentful-ui-extensions-sdk";
 import { TypedNode, PortColors, IExtFlowChartCallbacks, IOnModal } from "./FlowContext";
 
@@ -11,7 +11,18 @@ const defaultCallbacks : defaultCallbackInputs  = ({chart,callback,modal, sdk}) 
             var updateChart = onDragNode(args) as any;
             callback(updateChart(chart));
         },
-        onDragCanvas: (args) => {},
+        onDragCanvas: (args) => {
+            
+            if(args.data.x > 60){
+                args.data.x = 60;
+            }
+            if(args.data.y > 60){
+                args.data.y = 60;
+            }
+            var updateChart = onDragCanvas(args) as any
+            callback(updateChart(chart));
+
+        },
         onCanvasDrop: (args) => {
             var updateChart = onCanvasDrop(args) as any
             callback(updateChart(chart));

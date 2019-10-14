@@ -20,13 +20,16 @@ const SaveOrCloseWrapper = styled.div`
 
 const cleanDataBeforeSave = (chart:IChart) =>{
     var localData = Object.assign({},chart)
-
+    localData.offset = {
+        x: 0,
+        y: 0,
+    };
     Object.values(localData.nodes).forEach((node) => {
         node.position = {
             x : node.position.x,
             y : node.position.y
         }
-    })
+    });
 
     return localData;
 }

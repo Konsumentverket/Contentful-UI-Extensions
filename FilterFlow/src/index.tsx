@@ -51,21 +51,28 @@ export class App extends React.Component<AppProps, AppState> {
 
   render = () => {
     
+    
+
     if(this.props.sdk.location.is(locations.LOCATION_DIALOG)){
         var dialogSdk = this.props.sdk as DialogExtensionSDK
         var invocation = dialogSdk.parameters.invocation as any
         return <FilterFlow sdk={dialogSdk} chart={invocation.value} />
     }
     else{
+
+      var parameters:any = {
+        value: this.state.value
+      }
+      Object.keys(this.props.sdk.parameters.instance).forEach((key) => {
+        parameters[key] = (this.props.sdk.parameters.instance as any)[key];
+      })
+
       return (
         <Button onClick={()=> {
           this.props.sdk.dialogs.openExtension({
             id:"FilterFlow",
-            title:"Filterbyggaren",
             width: 1500,
-            parameters:{
-              value: this.state.value
-            }
+            parameters:parameters
           })
           .then(data => {
             if(data){

@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { TextInput, Dropdown, DropdownListItem, DropdownList, Button, TextLink } from "@contentful/forma-36-react-components"
 import { FlowContext } from "./FlowContext"
 import { IPort } from "../ReactFlowChart"
+import Entry from "./Entry"
+import EntryLight from "./EntryLight"
 
 const EditOptionsContainer = styled.div`
 
@@ -46,7 +48,12 @@ const SelectedPort = styled.span`
     width: 20px;
     border: 2px solid #000;
     height: 20px;
-    font-size: 10px;
+    line-height: 22px;
+    font-size: 11px;
+    span{
+        position:relative;
+        top:-1px;
+    }
 `
 
 const ActionsWrapper = styled.div`
@@ -63,6 +70,14 @@ const ActionsWrapper = styled.div`
 
 `
 
+const Label = styled.span`
+    font-size: 14px;
+    line-height: 24px;
+    color: #8091a5;
+    margin-top:10px;
+`
+
+
 const EditOption: React.FunctionComponent = () => {
     
     var context = React.useContext(FlowContext);
@@ -70,13 +85,26 @@ const EditOption: React.FunctionComponent = () => {
     const nodeId = context.editingOption!.nodeId;
     const portId = context.editingOption!.portId;
     const [dropdownOpen, setDropdownOpen] = React.useState(false)
+    const [taxonomiSysesDropdownOpen, setTaxonomiSysesDropdownOpen] = React.useState(false);
     const [text, setText] = React.useState(context.editingOption!.text)
     const node = context.chart.nodes[nodeId];
-
     const optionRef = React.createRef<HTMLInputElement>();
+
+    
+    const [taxonomiSyses, setTaxonomiSyses] = React.useState<Array<any> | null>()
+
     React.useEffect(() => {
-        if(optionRef.current != null)
+        if(optionRef.current != null){
             optionRef.current.focus()
+        }
+        if(!!node.properties.taxonomiEntry){
+            context.sdk.space.getEntry(node.properties.taxonomiEntry.id).then(e => {
+                var entry = e as any;
+                if(entry.sys.contentType.sys.id == "taxonomyTop"){
+                    setTaxonomiSyses(entry.fields.subLevel[context.sdk.locales.default]);
+                }
+            })
+        }
     },[])
 
 
@@ -86,6 +114,10 @@ const EditOption: React.FunctionComponent = () => {
     }
 
     const [selectedPort, setSelectedPort] = React.useState<IPort | null>(port)
+    const [selectedTaxonomisubLevel, setSelectedTaxonomisubLevel] = React.useState<any | null>(context.editingOption!.taxonomiSubLevel)
+    
+
+    
 
     return <EditOptionsContainer>
         <h2>Redigera alternativ för: {node.properties.question}</h2>
@@ -93,7 +125,49 @@ const EditOption: React.FunctionComponent = () => {
             setText(e.target.value);
         }} />
 
-        <TextLink onClick={() => {console.log("taxanomi värde")}} className="explanation" icon={"Link"}>Välj taxanomi värde?</TextLink>
+
+        {selectedTaxonomisubLevel != null ? 
+            <>
+                <Label>Vald taxonomi:</Label>
+                <EntryLight sys={selectedTaxonomisubLevel} onRemove={() => {
+                    setSelectedTaxonomisubLevel(null)
+                }} />
+            </> 
+        : 
+            <Dropdown isOpen={taxonomiSysesDropdownOpen} toggleElement={
+                <Button 
+                size="small"
+                buttonType="muted"
+                indicateDropdown 
+                className="dropdown"
+                onClick={()=> {
+                    setTaxonomiSysesDropdownOpen(!taxonomiSysesDropdownOpen)
+                }}>
+                    Välj taxonomi
+                </Button>
+            }>
+                <DropdownList maxHeight={300}>
+                    {taxonomiSyses != null ? taxonomiSyses.map((t) => {
+                        return <DropdownListItem key={t.sys.id} onClick={()=> {
+                            setSelectedTaxonomisubLevel(t.sys);
+                            setTimeout(() =>{
+                                setTaxonomiSysesDropdownOpen(false);
+                            },10)
+                            
+                        }}>
+                                    <EntryLight sys={t.sys} />
+                                </DropdownListItem>
+                    }) 
+                    :
+                    null
+                    }
+                </DropdownList>
+            </Dropdown>
+        }
+
+
+
+        
 
         <Dropdown isOpen={dropdownOpen} 
             toggleElement={<Button 
@@ -103,7 +177,10 @@ const EditOption: React.FunctionComponent = () => {
                                 className="dropdown"
                                 onClick={() => setDropdownOpen(!dropdownOpen)}>
                                     {selectedPort ? 
-                                        <><span>Utgångspunkt: </span><SelectedPort style={{backgroundColor: selectedPort.properties.color}} > #{selectedPort.properties.index}</SelectedPort></> : 
+                                        <>
+                                            <span>Utgångspunkt: </span>
+                                            <SelectedPort style={{backgroundColor: selectedPort.properties.color}} > <span>#{selectedPort.properties.index}</span></SelectedPort>
+                                        </> : 
                                         "Välj utgångspunkt"
                                     }
                             </Button>
@@ -133,6 +210,7 @@ const EditOption: React.FunctionComponent = () => {
                     const option = context.editingOption!;
                     option.text = text;
                     option.portId = selectedPort!.id;
+                    option.taxonomiSubLevel = selectedTaxonomisubLevel
                     context.saveOption(option);
                 }
             }>Spara</Button>

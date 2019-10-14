@@ -4,6 +4,7 @@ import { INodeInnerDefaultProps } from "../ReactFlowChart";
 import F36Tokens from '@contentful/forma-36-tokens';
 import { FlowContext } from "./FlowContext";
 import { Icon, TextLink } from "@contentful/forma-36-react-components";
+import Entry from "./Entry";
 
 export interface OptionProps {
     id: string,
@@ -15,7 +16,7 @@ const Box = styled.div`
     width: 300px;
 `
 
-const Entry = styled.div`
+const EntryWrapper = styled.div`
     width: 300px;
     background-color: #fff;
     box-sizing: border-box;
@@ -51,12 +52,22 @@ const ResultNode: React.FunctionComponent<INodeInnerDefaultProps> = (props) => {
         <Result>
             Resultat <Icon icon={"Star"} color="white" />
         </Result>
-        <Entry>
-        <TextLink onClick={() => {
-            context.openResultEntryDialog();
-        }} className="explanation" icon={"Link"}>Välj innehåll för resultatet</TextLink>
+        <EntryWrapper>
             
-        </Entry>
+        {props.node.properties.entry == null ? 
+            <TextLink onClick={() => {
+                context.openResultEntryDialog(props.node.id);
+            }} className="explanation" icon={"Link"}>Välj innehåll för resultatet</TextLink> 
+            : 
+            <Entry sys={props.node.properties.entry} onRemove={()=> {
+                context.removeNodeEntry(props.node.id,"entry");
+            }} />
+        }
+
+        
+
+
+        </EntryWrapper>
     </Box>
     
 }
