@@ -99,7 +99,7 @@ const QuestionNode: React.FunctionComponent<INodeInnerDefaultProps> = (props) =>
                             id: v4(),
                             nodeId: node.id,
                             order: Object.keys(node.properties.options).length + 1,
-                            taxonomiSubLevel: null
+                            taxonomiSubLevels: null
                         }
                         context.editOption(option)
                     }}

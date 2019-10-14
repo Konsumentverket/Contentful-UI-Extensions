@@ -10,21 +10,28 @@ export interface EntryLightProps {
 
 
 const EntryLight: React.FunctionComponent<EntryLightProps> = ({sys,onRemove}) => {
+
     var context = React.useContext(FlowContext)
 
     const [entry,setEntry] = React.useState<any | null>(null);
     const [contentType,setContentType] = React.useState<any | null>(null)
     React.useEffect(()=> {
+        let isMounted = true
         context.sdk.space.getEntry(sys.id).then(e => { 
+            if(!isMounted) return;
             setEntry(e as any);
         })
+        return () => {isMounted = false}
     },[sys.id])
 
-    React.useEffect(()=> {
+    React.useEffect(() => {
         if(entry == null) return;
+        let isMounted = true
         context.sdk.space.getContentType(entry.sys.contentType.sys.id).then(c => {
+            if(!isMounted) return;
             setContentType(c);
         })
+        return () => {isMounted = false}
     },[entry]);
 
 
@@ -42,7 +49,7 @@ const EntryLight: React.FunctionComponent<EntryLightProps> = ({sys,onRemove}) =>
     if(!!onRemove){
         var ddl = <DropdownList>  
             <DropdownListItem onClick={() => {
-                onRemove()
+                onRemove(sys)
             }}>Remove</DropdownListItem>
         </DropdownList>
         inputs.dropdownListElements = ddl;

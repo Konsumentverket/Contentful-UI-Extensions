@@ -18,7 +18,7 @@ export interface IOption {
     portId?:string;
     nodeId:string;
     order:number;
-    taxonomiSubLevel: any;
+    taxonomiSubLevels: Array<any> | null;
 }
 
 interface IModal {
@@ -117,6 +117,7 @@ export const FilterFlowContext: React.FunctionComponent<FilterFlowContextProps> 
         chart.nodes[option.nodeId].properties.options[option.id] = option;
         setChart(Object.assign({},chart));
         setEditingOption(null);
+        
     }
     
 
@@ -134,8 +135,15 @@ export const FilterFlowContext: React.FunctionComponent<FilterFlowContextProps> 
     }
 
     const removeOption = (nodeId:string,optionId:string) =>{
-        delete chart.nodes[nodeId].properties.options[optionId]
-        setChart(Object.assign({},chart));
+
+        showModal("Är du säker?","",(b:boolean) => {
+            if(b){
+                delete chart.nodes[nodeId].properties.options[optionId]
+                setChart(Object.assign({},chart));
+            }
+        })
+
+        
     }
 
     const editNodeQuestion = (node:INode | null) => {
