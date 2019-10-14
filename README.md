@@ -39,3 +39,45 @@ The use case is when you want to list something and you don't want to use conten
 This extension is used to add Microcopy values without having to use Content or Contentmodels for adding microcopy texts.
 You define an area ex. 'Footer' and then define keys and values connected to the 'Footer'.
 
+## FilterFlow
+This extension is used to create filtering flows to help users navigate to the right content based on a series of questions.
+
+Its built using [React flow chart](https://github.com/MrBlenny/react-flow-chart) as a base. The extension opens in a full screen dialog using Contentfuls dialogs.
+
+Installation of the extension is not possible thru the `code`npm run deploy`code` script as the bundled script exceeds the size limit of Contentful. Instead we install it using github pages and the build folder and point the extension to the correct github pages url.  
+Github pages url: [https://konsumentverket.github.io/Contentful-UI-Extensions/FilterFlow/build](https://konsumentverket.github.io/Contentful-UI-Extensions/FilterFlow/build)
+
+### Options
+**Name**: FilterFlow  
+**Field type**: Object  
+**Instance parameters**:  
+```
+{
+    "id": "helpText",
+    "type": "Symbol",
+    "name": "Help text",
+    "description": "Help text for a user to help them understand the editor"
+},{
+    "id":"resultEntrys",
+    "name": "Type of result entrys",
+    "type": "Symbol",
+    "required": true
+},
+{
+    "id":"explanationEntrys",
+    "name": "Type of explanation entrys",
+    "type": "Symbol",
+    "required": true
+},
+{
+    "id":"taxonomyEntrys",
+    "name": "Type of taxonomy entrys",
+    "type": "Symbol",
+    "required": true
+}
+```
+
+
+
+
+
