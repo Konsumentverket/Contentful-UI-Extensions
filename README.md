@@ -44,7 +44,7 @@ This extension is used to create filtering flows to help users navigate to the r
 
 Its built using [React flow chart](https://github.com/MrBlenny/react-flow-chart) as a base. The extension opens in a full screen dialog using Contentfuls dialogs.
 
-Installation of the extension is not possible thru the `code`npm run deploy`code` script as the bundled script exceeds the size limit of Contentful. Instead we install it using github pages and the build folder and point the extension to the correct github pages url.  
+Installation of the extension is not possible thru the `npm run deploy` script as the bundled script exceeds the size limit of Contentful. Instead we install it using github pages and the build folder and point the extension to the correct github pages url.  
 Github pages url: [https://konsumentverket.github.io/Contentful-UI-Extensions/FilterFlow/build](https://konsumentverket.github.io/Contentful-UI-Extensions/FilterFlow/build)
 
 ### Options
