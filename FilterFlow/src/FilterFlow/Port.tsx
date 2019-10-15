@@ -35,24 +35,24 @@ const Port: React.FunctionComponent<IPortDefaultProps> = (props) => {
 
     var context = React.useContext(FlowContext)
 
-    var ref = React.useRef<any>()
+    // var ref = React.useRef<any>()
     React.useLayoutEffect(() => {
         setPortPosition({chart:context.chart, portPositionChange:context.defaultCallbacks.onPortPositionChange,port:props.port});
     });
     
-    //fix to be able to delete the item before the main 'canvas' has focus
-    React.useLayoutEffect(()=>{
-        clearTimeout(debouncer);
-        debouncer = setTimeout(() => {
-            ref.current.focus();
-        },50);
-    })
+    // //fix to be able to delete the item before the main 'canvas' has focus
+    // React.useLayoutEffect(()=>{
+    //     clearTimeout(debouncer);
+    //     debouncer = setTimeout(() => {
+    //         ref.current.focus();
+    //     },50);
+    // })
 
 
     var portSelected = context.chart.selected && context.chart.selected.type == "port" && context.chart.selected.id == props.port.id;
 
     return <Wrapper data-portid={props.port.id} 
-                    ref={ref}
+                    // ref={ref}
                     className={portSelected ? "selected": ""} 
                     color={props.port.properties.color}
                     tabIndex={0}
