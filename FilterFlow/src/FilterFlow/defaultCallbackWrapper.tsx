@@ -66,7 +66,7 @@ const defaultCallbacks : defaultCallbackInputs  = ({chart,callback,modal, sdk}) 
         onDeleteKey: (args) => {
 
             if(chart.selected.type == "node" && chart.selected.id == "start") return;
-
+            if(chart.selected.id == null) return;
 
             modal("Är du säker på att du vill plocka bort elementet?",
                 "Detta går inte att ångra",(e:any) => {
@@ -78,14 +78,13 @@ const defaultCallbacks : defaultCallbackInputs  = ({chart,callback,modal, sdk}) 
                         var selected = Object.values(node.ports).filter(x => x.id == chart.selected.id);
                         if(selected.length == 1){
                             delete typednode.ports[chart.selected.id!]
-                            Object.values(node.ports).forEach((p,i) => { 
-                                p.properties.color = PortColors[i]
-                                p.properties.index = (i + 1)
-                                p.position = undefined;
-                            });
                             var optionsToRemove = Object.values(typednode.properties.options).filter(x => x.portId == chart.selected.id)
                             optionsToRemove.forEach(x => delete typednode.properties.options[x.id]);
     
+                            Object.values(node.ports).forEach((p) => { 
+                                p.position = undefined;
+                            });
+
                             var linesToRemove = Object.values(chart.links).filter(x => x.from.portId == chart.selected.id)
                             linesToRemove.forEach(x => delete chart.links[x.id]);
                         }

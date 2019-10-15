@@ -24,6 +24,7 @@ const cleanDataBeforeSave = (chart:IChart) =>{
         x: 0,
         y: 0,
     };
+    localData.selected = {};
     Object.values(localData.nodes).forEach((node) => {
         node.position = {
             x : node.position.x,

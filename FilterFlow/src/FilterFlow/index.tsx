@@ -18,6 +18,7 @@ interface FilterFlowProps {
 }
 
 const FilterFlow: React.FunctionComponent<FilterFlowProps> = (props) => {
+
     return <div>
         <FilterFlowContext sdk={props.sdk} chart={props.chart}>
             <FlowContext.Consumer>

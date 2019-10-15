@@ -73,7 +73,7 @@ export const FilterFlowContext: React.FunctionComponent<FilterFlowContextProps> 
     const [editingOption, setEditingOption] = React.useState<IOption | null>();
     const [editingNodeQuestion, setEditingNodeQuestion] = React.useState<INode | null>();
     const [modal, setModal] = React.useState<IModal | null>();
-    
+
     const setChartCallback = (newChart:IChart) => {
         setChart(Object.assign({},newChart));
     }
@@ -103,9 +103,25 @@ export const FilterFlowContext: React.FunctionComponent<FilterFlowContextProps> 
         }
         nodeData.ports[portId] = port;
         var outputPorts = Object.values(nodeData.ports).filter((x) => x.type == "output");
-        var index = outputPorts.map((p) => p.id).indexOf(portId);
-        port.properties.color = PortColors[index]
-        port.properties.index = ++index;
+        var foundIndex = null
+        for(var a = 0; outputPorts.length > a; a++){
+            var possibleIndex = a + 1;
+            
+            var found = outputPorts.filter((x) => x.properties.index == possibleIndex);
+            if(found.length > 0) continue;
+
+            foundIndex = possibleIndex;
+        }
+
+        port.properties.color = PortColors[(foundIndex! - 1)];
+        port.properties.index = foundIndex!;
+
+        //give it new sortorder
+        var newPorts:any = {};
+        Object.values(nodeData.ports).sort((x,y)=>x.properties.index - y.properties.index).forEach((p)=>{
+            newPorts[p.id] = p;
+        })
+        nodeData.ports = newPorts;
         setChart(Object.assign({},chart));
     }
     //ADD OPTION

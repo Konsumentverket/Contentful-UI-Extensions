@@ -4,6 +4,7 @@ import { IConfig, IOnCanvasClick } from '../../'
 export interface ICanvasInnerDefaultProps {
   config: IConfig
   children: any
+  ref:any
   onClick: IOnCanvasClick
   tabIndex: number
   onKeyDown: (e: React.KeyboardEvent) => void
