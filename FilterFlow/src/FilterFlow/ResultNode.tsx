@@ -14,6 +14,14 @@ export interface OptionProps {
 
 const Box = styled.div`
     width: 300px;
+
+    /* Here be dragons - this is to prevent the result dialog contentype text to linebreak and create a scrollbar */
+    [data-test-id="content-type"]{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
 `
 
 const EntryWrapper = styled.div`
