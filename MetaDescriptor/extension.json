@@ -1,10 +1,9 @@
 {
-  "id": "Microcopy",
-  "name": "Microcopy",
+  "id": "MetaDescriptor",
+  "name": "MetaDescriptor",
   "srcdoc": "./build/index.html",
   "fieldTypes": [
     "Object"
   ],
-  "parameters": {
-  }
+  "parameters": {}
 }
