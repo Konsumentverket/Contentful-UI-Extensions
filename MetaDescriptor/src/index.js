@@ -13,7 +13,6 @@ const App = ({ sdk }) => {
   const space = sdk.space
 
   const [items, setItems] = useState([])
-  const [resultArr, setResultArr] = useState([])
 
   useEffect(() => {
     space.getEntry('Ec918LcMh3UhCvPWE69Tz')
@@ -27,7 +26,15 @@ const App = ({ sdk }) => {
             }
           })))
       .then(res => {
+        console.log('stored values')
         console.log(sdk.field.getValue())
+        const storedValues = sdk.field.getValue()
+        res = res.map(r => ({
+          name: r.name,
+          checked: r.checked = storedValues.includes(r.name)
+        }))
+
+        console.log(res)
         setItems(res)
       })
       .catch(e => console.error(e))
@@ -38,6 +45,15 @@ const App = ({ sdk }) => {
     const index = items.findIndex(f => f.name === item.name)
     temp[index].checked = check
     setItems(temp)
+  }
+
+  const saveStatus = () => {
+    const temp = items.slice()
+      .filter(item => item.checked === true)
+      .map(item => item.name)
+    console.log('saving')
+    console.log(temp)
+    sdk.field.setValue(temp)
   }
 
   return (
@@ -55,6 +71,7 @@ const App = ({ sdk }) => {
               } else {
                 updateCheckboxStatus(item, true)
               }
+              saveStatus()
             }}
           />
           <label htmlFor={item.name}>{item.name}</label>
