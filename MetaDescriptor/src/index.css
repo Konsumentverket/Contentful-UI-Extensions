@@ -9,52 +9,15 @@ div {
   vertical-align: baseline;
 }
 
-.tabswrap{
+.wrapper {
+  display: flex;
   flex-wrap: wrap;
 }
 
-.removearea{
-  float: right;
+.item {
+  padding: 10px;
 }
 
-.values{
-  list-style: none;
-  padding-left: 0;
-}
-
-.microcopyvalue{
-  display: inline-block;
-}
-
-.microcopyvalue.large{
-  width: 400px;
-}
-
-.microcopyvalue input{
-  max-height: 37px;
-  box-sizing:border-box;
-}
-
-.microcopyinput{
-  margin-bottom: 4px;
-  display: flex;
-  
-  align-items: center;
-}
-
-.field{
-  display: inline-block;
-  border: 1px solid #d3dce0;
-  margin: 0 4px;  
-}
-
-
-.field .fieldvalue{
-  min-width: 230px;
-  display: inline-block;
-}
-
-.codeconnection{
-  position: relative;
-  top: 4px;
+.label {
+  padding-left: 3px;
 }

@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
 import { Checkbox } from '@contentful/forma-36-react-components'
 import { init } from 'contentful-ui-extensions-sdk';
 import '@contentful/forma-36-react-components/dist/styles.css'
 import './index.css'
-import MicrocopyEdit from './MicrocopyEdit'
-import speakingurl from 'speakingurl'
 
 const App = ({ sdk }) => {
   const defaultLocale = sdk.locales.default
   const space = sdk.space
 
+  const id = sdk.parameters.instance.id
+  const metaName = sdk.parameters.instance.metaName
+
   const [items, setItems] = useState([])
 
   useEffect(() => {
-    space.getEntry('Ec918LcMh3UhCvPWE69Tz')
+    sdk.window.startAutoResizer()
+    space.getEntry(id)
       .then(res =>
         Promise.all(res.fields.subLevel[defaultLocale]
           .map(async field => {
@@ -37,7 +38,6 @@ const App = ({ sdk }) => {
         console.log(res)
         setItems(res)
       })
-      .catch(e => console.error(e))
   }, [])
 
   const updateCheckboxStatus = (item, check) => {
@@ -57,33 +57,34 @@ const App = ({ sdk }) => {
   }
 
   return (
-    <div>
-      <p>Items</p>
-      {items.map((item, i) => (
-        <div key={`${item.name} ${i}`}>
-          <Checkbox
-            labelText={item.name}
-            id={item.name}
-            checked={item.checked}
-            onChange={e => {
-              if (item.checked) {
-                updateCheckboxStatus(item, false)
-              } else {
-                updateCheckboxStatus(item, true)
-              }
-              saveStatus()
-            }}
-          />
-          <label htmlFor={item.name}>{item.name}</label>
-        </div>
-      ))}
+    <>
+      <div className='wrapper'>
+        {items.map((item, i) => (
+          <div key={`${item.name} ${i}`} className='item'>
+            <Checkbox
+              labelText={item.name}
+              id={item.name}
+              checked={item.checked}
+              onChange={e => {
+                if (item.checked) {
+                  updateCheckboxStatus(item, false)
+                } else {
+                  updateCheckboxStatus(item, true)
+                }
+                saveStatus()
+              }}
+            />
+            <label htmlFor={item.name} className='label'>{item.name}</label>
+          </div>
+        ))}
+      </div>
       <button
         onClick={() => console.log(sdk.field.getValue())}
       >getValue</button>
-    </div>
+    </>
   )
 }
 
 init(sdk => {
   ReactDOM.render(<App sdk={sdk} />, document.getElementById('root'));
-});
+})

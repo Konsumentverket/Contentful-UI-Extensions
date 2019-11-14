@@ -5,5 +5,22 @@
   "fieldTypes": [
     "Object"
   ],
-  "parameters": {}
+  "parameters": {
+    "instance": [
+      {
+        "id": "id",
+        "type": "Symbol",
+        "name": "Referens till Taxonomi toppnivå",
+        "description": "Exempelvis Ec918LcMh3UhCvPWE69Tz",
+        "required": true
+      },
+      {
+        "id": "metaName",
+        "type": "Symbol",
+        "name": "Meta namn",
+        "description": "Exempelvis consumerrights, purchastetype",
+        "required": true
+      }
+    ]
+  }
 }
