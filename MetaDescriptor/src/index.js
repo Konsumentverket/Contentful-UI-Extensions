@@ -60,9 +60,7 @@ const App = ({ sdk }) => {
     const temp = items.slice()
       .filter(item => item.checked === true)
       .map(item => item.name)
-    console.log('saving')
-    console.log(temp)
-    console.log(metaName)
+
     sdk.field.setValue({
       metaName: metaName,
       tags: temp
@@ -74,7 +72,6 @@ const App = ({ sdk }) => {
       <Button
         icon='Settings'
         onClick={() => {
-          console.log(sdk.field.getValue())
           setShowSelection(callback => !callback)
         }}
       >{showSelection ? 'Stäng Metataggar' : 'Öppna Metataggar'}</Button>
