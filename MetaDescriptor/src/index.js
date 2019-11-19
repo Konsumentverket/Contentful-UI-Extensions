@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom'
-import { Checkbox } from '@contentful/forma-36-react-components'
+import { Checkbox, Button } from '@contentful/forma-36-react-components'
 import { init } from 'contentful-ui-extensions-sdk';
 import '@contentful/forma-36-react-components/dist/styles.css'
 import './index.css'
@@ -13,6 +13,7 @@ const App = ({ sdk }) => {
   const metaName = sdk.parameters.instance.metaName
 
   const [items, setItems] = useState([])
+  const [showSelection, setShowSelection] = useState(false)
 
   useEffect(() => {
     sdk.window.startAutoResizer()
@@ -27,18 +28,26 @@ const App = ({ sdk }) => {
             }
           })))
       .then(res => {
-        console.log('stored values')
-        console.log(sdk.field.getValue())
-        const storedValues = sdk.field.getValue()
-        res = res.map(r => ({
-          name: r.name,
-          checked: r.checked = storedValues.includes(r.name)
-        }))
+        let storedValues = sdk.field.getValue()
+        if (storedValues !== undefined) {
+          storedValues = cleanUnusedValues(storedValues, res)
+          res = res.map(r => ({
+            name: r.name,
+            checked: r.checked = storedValues.tags.includes(r.name)
+          }))
+        }
 
-        console.log(res)
         setItems(res)
       })
   }, [])
+
+  const cleanUnusedValues = (storedValues, res) => {
+    const temp = res.map(r => r.name)
+    return {
+      metaName: storedValues.metaName,
+      tags: storedValues.tags.filter(tag => temp.includes(tag))
+    }
+  }
 
   const updateCheckboxStatus = (item, check) => {
     const temp = items.slice()
@@ -53,12 +62,23 @@ const App = ({ sdk }) => {
       .map(item => item.name)
     console.log('saving')
     console.log(temp)
-    sdk.field.setValue(temp)
+    console.log(metaName)
+    sdk.field.setValue({
+      metaName: metaName,
+      tags: temp
+    })
   }
 
   return (
     <>
-      <div className='wrapper'>
+      <Button
+        icon='Settings'
+        onClick={() => {
+          console.log(sdk.field.getValue())
+          setShowSelection(callback => !callback)
+        }}
+      >{showSelection ? 'Stäng Metataggar' : 'Öppna Metataggar'}</Button>
+      {showSelection && <div className='wrapper'>
         {items.map((item, i) => (
           <div key={`${item.name} ${i}`} className='item'>
             <Checkbox
@@ -77,10 +97,7 @@ const App = ({ sdk }) => {
             <label htmlFor={item.name} className='label'>{item.name}</label>
           </div>
         ))}
-      </div>
-      <button
-        onClick={() => console.log(sdk.field.getValue())}
-      >getValue</button>
+      </div>}
     </>
   )
 }
