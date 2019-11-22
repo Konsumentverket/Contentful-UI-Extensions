@@ -45,14 +45,10 @@ export class App extends React.Component {
       })
       var fetchedItemIds = [];
 
-      console.log("fetching");
-
       extension.space.getEntries({
         links_to_entry: extension.entry.getSys().id
       })
         .then(async (data) => {
-
-          console.log({ data });
 
           this.asyncForEach(data.items, async (item) => {
 
@@ -71,6 +67,7 @@ export class App extends React.Component {
                   'id': item.sys.id,
                   'contentTypeName': contentType,
                   'title': item.fields.title ? item.fields.title[defaultLocale] : item.fields.headline[defaultLocale],
+                  'order': stateItems.length,
                 });
                 currentItemIds.push(item.sys.id);
               });

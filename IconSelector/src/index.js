@@ -13,13 +13,13 @@ class App extends React.Component {
     sdk: PropTypes.object.isRequired,
   };
 
-  
+
   detachExternalChangeHandler = null;
 
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
-    
+
     this.state = {
       selected: props.sdk.field.getValue(),
       icons: []
@@ -29,19 +29,18 @@ class App extends React.Component {
 
   }
 
-fetchIcons()
-{   
-  var baseurl = this.props.sdk.parameters.installation.IconUrl;
-  fetch(baseurl+"IconExport.json")
-  .then(response => response.json())
-  .then((jsonData) => {
-    var icons = [];
-    Array.from(jsonData.icons).map(function(e){ 
-      icons.push({icon: e.name,  title: e.title, url: baseurl+e.url }); 
-    });
-    this.setState({icons: icons});
-  })
-}
+  fetchIcons() {
+    var baseurl = this.props.sdk.parameters.installation.IconUrl;
+    fetch(baseurl + "IconExport.json")
+      .then(response => response.json())
+      .then((jsonData) => {
+        var icons = [];
+        Array.from(jsonData.icons).map(function (e) {
+          icons.push({ icon: e.name, title: e.title, url: baseurl + e.url });
+        });
+        this.setState({ icons: icons });
+      })
+  }
   componentDidMount() {
     this.props.sdk.window.startAutoResizer();
     this.detachExternalChangeHandler = this.props.sdk.field.onValueChanged(
@@ -69,50 +68,51 @@ fetchIcons()
     }
   };
 
-  handleClick(event){ 
-    this.setState({selected:event},() => {
-        this.props.sdk.field.setValue(this.state.selected);
-    });     
-}
+  handleClick(event) {
+    this.setState({ selected: event }, () => {
+      this.props.sdk.field.setValue(this.state.selected);
+    });
+  }
 
-handleRemove(){ 
-  this.setState({selected:undefined});  
-    
-}
+  handleRemove() {
+    this.setState({ selected: undefined }, () => {
+      this.props.sdk.field.setValue(this.state.selected);
+    });
+  }
 
 
 
   render() {
-    
+
     var self = this;
     var selectedIcon = this.state.selected !== undefined &&
-    <div className="icon icon--selected">
-      <span className="info">Vald ikon</span>
-      <Icon title={this.state.selected.title} url={this.state.selected.url+"?sanitize=true"} />
-    </div>;
+      <div className="icon icon--selected">
+        <span className="info">Vald ikon</span>
+        <Icon title={this.state.selected.title} url={this.state.selected.url + "?sanitize=true"} />
+      </div>;
 
     var removeIcon = this.state.selected !== undefined &&
-    <a className="iconremove" onClick={() => self.handleRemove()}>Ta bort</a> 
+      <a className="iconremove" onClick={() => self.handleRemove()}>Ta bort</a>
 
 
-    var icons = (this.state.icons.map(function(e){
+    var icons = (this.state.icons.map(function (e) {
       return (
-               
-            <div className="icon" data-url={e.url} onClick={() => self.handleClick(e)}>
-              <Icon title={e.title} url={e.url+"?sanitize=true"} />
-            
-      </div>
+
+        <div className="icon" data-url={e.url} onClick={() => self.handleClick(e)}>npm audit fix
+          <Icon title={e.title} url={e.url + "?sanitize=true"} />
+
+        </div>
       )
     }));
-   
-    return ( <>
-    {selectedIcon}
-    <div className="iconlist">  
-      {icons}
+
+    return (<>
+      {selectedIcon}
+      <div className="iconlist">
+        {icons}
       </div>
-      
+
       {removeIcon}
-      </>
+    </>
     );
   }
 }
