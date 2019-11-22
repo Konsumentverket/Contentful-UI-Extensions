@@ -98,7 +98,7 @@ class App extends React.Component {
     var icons = (this.state.icons.map(function (e) {
       return (
 
-        <div className="icon" data-url={e.url} onClick={() => self.handleClick(e)}>npm audit fix
+        <div className="icon" data-url={e.url} onClick={() => self.handleClick(e)}>
           <Icon title={e.title} url={e.url + "?sanitize=true"} />
 
         </div>
