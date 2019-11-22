@@ -7,6 +7,9 @@ import '@contentful/forma-36-react-components/dist/styles.css';
 import './index.css';
 import TextListItem from './TextListItem';
 import TextareaListItem from './TextareaListItem';
+import AirlineListItem from './AirlineListItem';
+import DeniedReasonListItem from './DeniedReasonListItem';
+import { v4 } from 'uuid'
 
 class App extends React.Component {
   static propTypes = {
@@ -27,7 +30,11 @@ class App extends React.Component {
       case "Text":
         return TextListItem;
       case "Textarea":
-        return TextareaListItem
+        return TextareaListItem;
+      case "Airlines":
+        return AirlineListItem;
+      case "DeniedReasons":
+        return DeniedReasonListItem;
       default:
         console.log("No item type for "+type+" found"); 
         return null;
@@ -39,7 +46,22 @@ class App extends React.Component {
     switch(type){
       case "Text":
       case "Textarea":
-        return {text:""}
+        return {
+          text:"",
+          id: v4()
+        }
+      case "Airlines":
+        return {
+          name:"",
+          information:"",
+          europeanCompany:false,
+          id: v4()
+        }
+      case "DeniedReasons":
+        return {
+          reason:"",
+          aircraftCarrierHasTheRightToDeny:false
+        }
       default:
         console.log("No default value for type " + type);
         return null;
@@ -75,6 +97,11 @@ class App extends React.Component {
   }
 
   onChange(item,index){
+      var oldVal = this.state.value[index];
+      item.id = oldVal.id;
+      if(item.id == null){
+        item.id = v4();
+      }
       var newVal = Object.assign([...this.state.value], {[index]: item});
       this.setState({
         value: newVal
@@ -96,6 +123,7 @@ class App extends React.Component {
   onMove(fromIndex,toIndex){
     var newVal = [...this.state.value];
     var element = newVal[fromIndex];
+    //console.log(`from:${fromIndex}  to:${toIndex}`)
     newVal.splice(fromIndex, 1);
     newVal.splice(toIndex, 0, element);
     this.setState({
@@ -108,19 +136,19 @@ class App extends React.Component {
   render() {
     var ItemType = this.getComponentType();
     var self = this;  
-    var fields = (this.state.value == null ? [] : this.state.value).map(function(e,i){
-        return <ItemType onChange={self.onChange.bind(self)} 
-                    index={i} 
-                    key={i}
-                    item={e}
-                    onRemove={self.onRemove.bind(self)}
-                    onMove={self.onMove.bind(self)}
-                />;
-    });
+    console.log(this.state.value);
 
     return (
       <>
-        {fields}
+        {(this.state.value == null ? [] : this.state.value).map((e,i) =>
+         <ItemType onChange={self.onChange.bind(self)} 
+                    index={i} 
+                    key={e.id}
+                    item={e}
+                    onRemove={self.onRemove.bind(self)}
+                    onMove={self.onMove.bind(self)}
+                />
+        )}
         <TextLink text="Create new item" icon={"Plus"} onClick={this.addItem.bind(this)} />
       </>
     );

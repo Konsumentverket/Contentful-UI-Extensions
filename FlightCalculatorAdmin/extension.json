@@ -1,0 +1,26 @@
+{
+  "id": "FlightCalculatorAdmin",
+  "name": "FlightCalculatorAdmin",
+  "srcdoc": "./build/index.html",
+  "sidebar": true,
+  "parameters": {
+    "installation": [{
+        "id": "ElasticsearchUrl",
+        "type": "Symbol",
+        "name":"ElasticsearchUrl"
+      },{
+        "id": "ElasticsearchUserName",
+        "type": "Symbol",
+        "name":"ElasticsearchUserName"
+      },{
+        "id": "ElasticsearchPassword",
+        "type": "Symbol",
+        "name":"ElasticsearchPassword"
+      },{
+        "id": "ElasticsearchAlias",
+        "type": "Symbol",
+        "name":"ElasticsearchAlias"
+      }
+    ]
+  }
+}

@@ -7,12 +7,14 @@ div {
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
 }
 
 
 .item{
   margin-bottom: 15px;
   position: relative;
+  min-height: 15px;
 }
 .item.dragOverActice .item-input input,
 .item.dragOverActice .item-input textarea {
@@ -29,11 +31,38 @@ div {
   left: 0px;
 }
 
-.item-input {
+.item.airlines .dragIcon{
+  top: 19px;
+}
+
+.item.airlines{
+  border: 1px solid #d3dce0;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  border-radius: 2px;
+  padding: 10px 10px 10px 0;
+}
+
+.item-input, .item-inputlabel {
   padding-left: 3%;
   box-sizing: border-box
 }
 
+.airlines .item-inputlabel, .airlines .checkbox{
+  margin-top: 10px;
+}
+
+.folder{
+  margin-left: 3%;
+  padding-left: 5px; 
+  padding: 5px 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+.folder svg{
+  vertical-align: middle;
+}
 
 .item-actions{
   float: right;

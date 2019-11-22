@@ -16,7 +16,7 @@
         "name": "Type of list",
         "type": "Enum",
         "required": true,
-        "options": ["Text","Textarea"]
+        "options": ["Text","Textarea","Airlines","DeniedReasons"]
       }
     ]
   }
