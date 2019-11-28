@@ -99,7 +99,7 @@ class App extends React.Component {
       return (
 
         <div className="icon" data-url={e.url} onClick={() => self.handleClick(e)}>
-          <Icon title={e.title} url={e.url + "?sanitize=true"} />
+          <Icon imgclass="image" title={e.title} url={e.url + "?sanitize=true"} />
 
         </div>
       )
