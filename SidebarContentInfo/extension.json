@@ -1,0 +1,6 @@
+{
+  "id": "SidebarContentInfo",
+  "name": "Innehållsinformation",
+  "srcdoc": "./build/index.html",
+  "sidebar": true
+}
