@@ -1,0 +1,8 @@
+{
+  "id": "LinkCollectionPageSettings",
+  "name": "LinkCollectionPageSettings",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Boolean"
+  ]
+}

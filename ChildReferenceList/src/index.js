@@ -18,7 +18,9 @@ export class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: props.sdk.field.getValue()
+      value: props.sdk.field.getValue(),
+      fetchedItems: [],
+      hasFetched: false,
     };
   }
 
@@ -45,7 +47,7 @@ export class App extends React.Component {
       })
       var fetchedItemIds = [];
 
-      extension.space.getEntries({
+      this.state.hasFetched || extension.space.getEntries({
         links_to_entry: extension.entry.getSys().id
       })
         .then(async (data) => {
@@ -83,7 +85,8 @@ export class App extends React.Component {
             });
 
             this.setState({
-              value: filtered
+              value: filtered,
+              hasFetched: true
             }, () => {
               this.props.sdk.field.setValue(this.state.value);
             });
@@ -128,6 +131,11 @@ export class App extends React.Component {
     })
   }
 
+  onClick(id) {
+    console.log("Navigate to child item ", id)
+    this.props.sdk.navigator.openEntry(id, { slideIn: true })
+  }
+
   clearItems() {
     this.setState(({
       value: []
@@ -148,6 +156,7 @@ export class App extends React.Component {
           title={e.title}
           contentTypeName={e.contentTypeName}
           onMove={self.onMove.bind(self)}
+          onClick={self.onClick.bind(self, e.id)}
         />);
     });
 
