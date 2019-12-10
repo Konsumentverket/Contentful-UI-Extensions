@@ -1,0 +1,17 @@
+{
+  "id": "OpeningHoursPicker",
+  "name": "OpeningHoursPicker",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Object"
+  ],
+  "parameters": {
+    "instance": [{
+        "id": "helpText",
+        "type": "Symbol",
+        "name": "Help text",
+        "description": "Help text for a user to help them understand the editor"
+      }
+    ]
+  }
+}
