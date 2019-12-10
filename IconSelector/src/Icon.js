@@ -14,7 +14,7 @@ class IconList extends Component {
     render() {
         return (
             <>
-                <img src={this.props.url} alt={this.props.title} />
+                <img src={this.props.url} alt={this.props.title} class={this.props.imgclass} />
                 <span className="title">{this.props.title}</span>
             </>  
         ); 
