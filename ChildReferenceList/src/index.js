@@ -21,6 +21,7 @@ export class App extends React.Component {
       value: props.sdk.field.getValue(),
       fetchedItems: [],
       hasFetched: false,
+      contentTypes: []
     };
   }
 
@@ -47,10 +48,21 @@ export class App extends React.Component {
       })
       var fetchedItemIds = [];
 
-      this.state.hasFetched || extension.space.getEntries({
+      extension.space.getEntries({
         links_to_entry: extension.entry.getSys().id
       })
         .then(async (data) => {
+
+          // Get content type names
+          if (!this.state.contentTypes.length) {
+            var ct = []
+            await extension.space.getContentTypes().then(types => {
+              types.items.map(type => {
+                ct[type.sys.id] = type.name
+              })
+              this.setState({ contentTypes: ct }, () => { })
+            })
+          }
 
           this.asyncForEach(data.items, async (item) => {
 
@@ -61,18 +73,14 @@ export class App extends React.Component {
             let isTrueChild = item.fields.parentReference && item.fields.parentReference[defaultLocale].sys.id === extension.entry.getSys().id;
 
             if (isTrueChild && !currentItemIds.includes(item.sys.id)) {
-
-              // Fetch content type name for items content type
-              await extension.space.getContentType(item.sys.contentType.sys.id).then(result => {
-                let contentType = result.name;
-                stateItems.push({
-                  'id': item.sys.id,
-                  'contentTypeName': contentType,
-                  'title': item.fields.title ? item.fields.title[defaultLocale] : item.fields.headline[defaultLocale],
-                  'order': stateItems.length,
-                });
-                currentItemIds.push(item.sys.id);
+              let contentType = this.state.contentTypes[item.sys.contentType.sys.id] || "";
+              stateItems.push({
+                'id': item.sys.id,
+                'contentTypeName': contentType,
+                'title': item.fields.title ? item.fields.title[defaultLocale] : item.fields.headline[defaultLocale],
+                'order': stateItems.length,
               });
+              currentItemIds.push(item.sys.id);
             }
             else {
               ; // Empty
@@ -102,7 +110,6 @@ export class App extends React.Component {
   }
 
   onExternalChange = value => {
-    console.log("External value: ", value);
     this.setState({ value });
   };
 
