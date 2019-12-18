@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import { Button } from '@contentful/forma-36-react-components';
+import { Button, HelpText, TextLink } from '@contentful/forma-36-react-components';
 import { init, locations } from 'contentful-ui-extensions-sdk';
 import tokens from '@contentful/forma-36-tokens';
 import '@contentful/forma-36-react-components/dist/styles.css';
@@ -36,7 +36,9 @@ export class SidebarExtension extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      contentType: ""
+      contentType: "",
+      container: "",
+      contentId: null
     };
   }
 
@@ -46,15 +48,17 @@ export class SidebarExtension extends React.Component {
 
     init(extension => {
 
-      let page = extension.entry
-
-      extension.space.getEntry(page.fields.content.getValue().sys.id).then(async (content) => {
+      /* extension.space.getEntry(page.fields.content.getValue().sys.id).then(async (content) => {
         let contentType = await extension.space.getContentType(content.sys.contentType.sys.id)
         this.setState({ contentType: contentType.name })
+      }) */
+
+      extension.space.getEntries({
+        links_to_entry: extension.entry.getSys().id
+      }).then(entries => {
+        let filtered = entries.items.filter(e => e.sys.contentType.sys.id === "webpage" && e.fields.contentSysId.sv === extension.entry.getSys().id)
+        filtered.length && this.setState({ container: filtered[0].fields.title.sv, contentId: filtered[0].sys.id })
       })
-
-
-
     })
   }
 
@@ -63,13 +67,19 @@ export class SidebarExtension extends React.Component {
       width: 800,
       title: 'The same extension rendered in modal window'
     });
-    console.log(result);
   };
+
+  navigateToContainer() {
+    let containerId = this.state.contentId
+    this.props.sdk.navigator.openEntry(containerId, { slideIn: true })
+  }
 
   render() {
     return (
       <>
-        <div>Innehållstyp: {this.state.contentType} </div>
+        {this.state.container ? <HelpText>
+          Webbsida: <TextLink icon="Entry" onClick={this.navigateToContainer.bind(this)}> {this.state.container}</TextLink>.
+        </HelpText> : null}
       </>
     );
   }

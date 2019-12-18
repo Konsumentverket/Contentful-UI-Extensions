@@ -21,5 +21,3 @@ node_modules/
 # Build
 build/*
 !/build/index.html
-!/build/*.css
-!/build/*.js
