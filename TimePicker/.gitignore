@@ -15,11 +15,6 @@ yarn-error.log*
 # Dependency directories
 node_modules/
 
-# Coverage
-.coverage
-
 # Build
 build/*
 !/build/index.html
-!/build/*.css
-!/build/*.js

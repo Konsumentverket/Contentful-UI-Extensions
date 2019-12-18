@@ -45,7 +45,7 @@ export class SidebarExtension extends React.Component {
     await this.props.sdk.dialogs.openExtension({
       width: 1000,
       parameters: this.props.sdk.parameters.installation,
-      title: 'Administrera flygkalkylatorn'
+      title: 'Administrera flygplatser'
     });
   };
 
@@ -56,7 +56,7 @@ export class SidebarExtension extends React.Component {
         isFullWidth={true}
         testId="open-dialog"
         onClick={this.onButtonClick.bind(this)}>
-        Administrate Flightcalculator
+        Administrera flygplatser
       </Button>
     );
   }
