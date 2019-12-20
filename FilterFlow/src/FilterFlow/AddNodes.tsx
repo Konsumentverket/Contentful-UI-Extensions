@@ -12,7 +12,7 @@ interface AddNodesProps {
 }
 
 const AddNodesWrapper = styled.div`
-    bottom: 0px;
+    top: 0px;
     left: 0px;
     position: fixed;
     background-color: #fff;
@@ -70,7 +70,7 @@ const ResultNodeDraggable = styled.div`
 
 const AddNodes: React.FunctionComponent<AddNodesProps> = (props) => {
 
-    return <AddNodesWrapper>
+    return <AddNodesWrapper className="AddNodesWrapper">
 
         <QuestionNodeDraggable draggable={true} onDragStart={(e) =>{
 
