@@ -18,7 +18,7 @@ export class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: props.sdk.field.getValue(),
+      value: props.sdk.field.getValue() || [],
       fetchedItems: [],
       hasFetched: false,
       contentTypes: []
@@ -39,17 +39,20 @@ export class App extends React.Component {
 
     // Get entries that link to this entry
     init(extension => {
+      const defaultLocale = extension.locales.default;
+      const parentRef = extension.entry.fields.parentReference.getValue()
+      const currentItemParentId = parentRef && parentRef.sys.id;
+      const currentEntryId = extension.entry.getSys().id
+      var stateItems = this.state.value ? [...this.state.value] : []
 
-      var defaultLocale = extension.locales.default;
-      var currentItemParentId = extension.entry.fields.parentReference.getValue() && extension.entry.fields.parentReference.getValue().sys.id;
-      var stateItems = [...this.state.value];
-      var currentItemIds = this.state.value.map(function (item) {
+      var currentItemIds = this.state.value ? this.state.value.map(function (item) {
         return item.id;
-      })
+      }) : []
+
       var fetchedItemIds = [];
 
       extension.space.getEntries({
-        links_to_entry: extension.entry.getSys().id
+        links_to_entry: currentEntryId
       })
         .then(async (data) => {
 
@@ -70,7 +73,7 @@ export class App extends React.Component {
             currentItemParentId && item.sys.id === currentItemParentId && extension.notifier.error("Denna sidas 'Referens till föregående sida' finns även med som underliggande sida");
 
             // Make sure the relation is as a child to this parent
-            let isTrueChild = item.fields.parentReference && item.fields.parentReference[defaultLocale].sys.id === extension.entry.getSys().id;
+            let isTrueChild = item.fields.parentReference && item.fields.parentReference[defaultLocale].sys.id === currentEntryId
 
             if (isTrueChild && !currentItemIds.includes(item.sys.id)) {
               let contentType = this.state.contentTypes[item.sys.contentType.sys.id] || "";
@@ -83,7 +86,7 @@ export class App extends React.Component {
               currentItemIds.push(item.sys.id);
             }
             else {
-              ; // Empty
+              ; //EMPTY
             }
             fetchedItemIds.push(item.sys.id);
           }).then(() => {
@@ -114,7 +117,6 @@ export class App extends React.Component {
   };
 
   onChange = e => {
-    console.log("Changed");
     const value = e.currentTarget.value;
     this.setState({ value });
     if (value) {
@@ -125,12 +127,10 @@ export class App extends React.Component {
   };
 
   onMove(fromIndex, toIndex) {
-    console.log("Indices: ", fromIndex, toIndex);
     var newVal = [...this.state.value];
     var element = newVal[fromIndex];
     newVal.splice(fromIndex, 1);
     newVal.splice(toIndex, 0, element);
-    console.log("Moved: ", newVal);
     this.setState({
       value: newVal
     }, function () {
@@ -139,7 +139,6 @@ export class App extends React.Component {
   }
 
   onClick(id) {
-    console.log("Navigate to child item ", id)
     this.props.sdk.navigator.openEntry(id, { slideIn: true })
   }
 
@@ -180,10 +179,3 @@ init(sdk => {
   ReactDOM.render(<App sdk={sdk} />, document.getElementById('root'));
 });
 
-/**
- * By default, iframe of the extension is fully reloaded on every save of a source file.
- * If you want to use HMR (hot module reload) instead of full reload, uncomment the following lines
- */
-// if (module.hot) {
-//   module.hot.accept();
-// }
