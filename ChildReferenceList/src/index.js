@@ -142,16 +142,6 @@ export class App extends React.Component {
     this.props.sdk.navigator.openEntry(id, { slideIn: true })
   }
 
-  clearItems() {
-    this.setState(({
-      value: []
-    }), function () {
-      this.props.sdk.field.setValue(this.state.value);
-    });
-    return false;
-  }
-
-
   render() {
     var self = this;
     var items = this.state.value && this.state.value.map(function (e, i) {
@@ -169,7 +159,6 @@ export class App extends React.Component {
     return (
       <>
         {items}
-        <TextLink text="Töm listan" onClick={this.clearItems.bind(this)} />
       </>
     );
   }
