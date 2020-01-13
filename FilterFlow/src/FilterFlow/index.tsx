@@ -10,6 +10,7 @@ import config from "./misc/config";
 import Line from "./Line";
 import EditQuestion from "./EditQuestion";
 import SaveOrClose from "./SaveOrClose";
+import styled from 'styled-components'
 
 
 interface FilterFlowProps {
@@ -17,9 +18,16 @@ interface FilterFlowProps {
     chart?: IChart;
 }
 
+const FlowWrapper = styled.div`
+    
+`;
+
+
+
+
 const FilterFlow: React.FunctionComponent<FilterFlowProps> = (props) => {
 
-    return <div>
+    return <FlowWrapper>
         <FilterFlowContext sdk={props.sdk} chart={props.chart}>
             <FlowContext.Consumer>
                 {context =>
@@ -42,7 +50,7 @@ const FilterFlow: React.FunctionComponent<FilterFlowProps> = (props) => {
             }
             </FlowContext.Consumer>
         </FilterFlowContext>
-    </div>
+    </FlowWrapper>
 }
 
 export default FilterFlow;
