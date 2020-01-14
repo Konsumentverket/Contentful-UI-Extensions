@@ -29,11 +29,11 @@ class App extends React.Component {
   componentDidMount() {
     this.props.sdk.window.startAutoResizer();
 
+    let headlineField = this.props.sdk.entry.fields["headline"]
+
     //if no initial value is set, autogenerate slug based on it
-    if(this.state.initialValue == null){
-      //handler for titlevalue change
-      var titleFieldName = this.props.sdk.contentType.displayField
-      var titleField = this.props.sdk.entry.fields[titleFieldName]
+    if (this.state.initialValue == null && headlineField) {
+      var titleField = this.props.sdk.entry.fields["headline"]
       this.detachTitleValueChangeHandler = titleField.onValueChanged(
         this.setValue
       );
@@ -49,16 +49,16 @@ class App extends React.Component {
     if (this.detachExternalChangeHandler) {
       this.detachExternalChangeHandler();
     }
-    if(this.detachTitleValueChangeHandler){
+    if (this.detachTitleValueChangeHandler) {
       this.detachTitleValueChangeHandler();
     }
   }
   //custom transformation for swedish diacritics
-  slugify = value => speakingurl(value,{
-    custom:{
-      'Å':"a", 'Ä':"a",
-      'Ö':"o", 'å':"a",
-      'ä':"a", 'ö':"o",
+  slugify = value => speakingurl(value, {
+    custom: {
+      'Å': "a", 'Ä': "a",
+      'Ö': "o", 'å': "a",
+      'ä': "a", 'ö': "o",
     }
   })
 
@@ -69,7 +69,7 @@ class App extends React.Component {
     query['sys.id[ne]'] = this.props.sdk.entry.getSys().id
     query['sys.publishedAt[exists]'] = true
     return this.props.sdk.space.getEntries(query).then(function (result) {
-      if(!value) return false;
+      if (!value) return false;
       return result.total > 0
     })
   }
@@ -79,11 +79,11 @@ class App extends React.Component {
     this.setState({
       value
     });
-    
+
     this.inputTimeoutDebounce = clearTimeout(this.inputTimeoutDebounce);
     this.inputTimeoutDebounce = setTimeout(() => (this.validateUniqueness(value)
       .then(hasDuplicates => {
-        if(hasDuplicates){
+        if (hasDuplicates) {
           this.setState({
             error: "Det finns redan ett innehåll med detta url-segment!",
           });
@@ -91,7 +91,7 @@ class App extends React.Component {
           return;
         }
         this.props.sdk.field.setInvalid(false);
-        this.setState({ 
+        this.setState({
           error: null
         });
         if (value) {
@@ -99,12 +99,12 @@ class App extends React.Component {
         } else {
           this.props.sdk.field.removeValue();
         }
-    })),250);
+      })), 250);
   }
 
 
   onExternalChange = value => {
-    if(value !== this.state.value && this.inputTimeoutDebounce == null){
+    if (value !== this.state.value && this.inputTimeoutDebounce == null) {
       this.setState({ value });
     }
   };
@@ -123,7 +123,7 @@ class App extends React.Component {
         id="urlslug"
       />
       {this.state.error ? <ValidationMessage>{this.state.error}</ValidationMessage> : null}
-      </>
+    </>
     );
   }
 }
