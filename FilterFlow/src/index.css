@@ -11,4 +11,12 @@ div {
 
 body{
   overflow: hidden;
+
+  
+
+}
+
+[class^="Modal__Modal__overlay"]{
+    width: 1500px;
+    height: 1400px;
 }

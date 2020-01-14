@@ -11,7 +11,7 @@ const EditOptionsContainer = styled.div`
     top: 0px;
     left: 0px;
     background-color: #fff;
-    z-index: 2;
+    z-index: 10;
     width: 100%;
     padding: 0px 15px 15px 15px;
     display: flex;

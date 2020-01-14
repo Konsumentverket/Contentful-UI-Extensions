@@ -12,13 +12,13 @@ interface AddNodesProps {
 }
 
 const AddNodesWrapper = styled.div`
-    bottom: 0px;
+    top: 0px;
     left: 0px;
     position: fixed;
     background-color: #fff;
     z-index: 2;
     width: 100%;
-    min-height: 50px;
+    min-height: 40px;
     padding: 10px;
     display: flex;
     box-shadow: 0px 0px 10px #888;
@@ -28,7 +28,7 @@ const AddNodesWrapper = styled.div`
 const QuestionNodeDraggable = styled.div`
 
     width: 100px;
-    height: 50px;
+    height: 40px;
     border: 1px solid #888;
     border-radius: 5px;
     cursor: grab;
@@ -49,7 +49,7 @@ const QuestionNodeDraggable = styled.div`
 const ResultNodeDraggable = styled.div`
 
     width: 100px;
-    height: 50px;
+    height: 40px;
     border: 1px solid #888;
     border-radius: 5px;
     margin-left: 40px;
@@ -70,7 +70,7 @@ const ResultNodeDraggable = styled.div`
 
 const AddNodes: React.FunctionComponent<AddNodesProps> = (props) => {
 
-    return <AddNodesWrapper>
+    return <AddNodesWrapper className="AddNodesWrapper">
 
         <QuestionNodeDraggable draggable={true} onDragStart={(e) =>{
 

@@ -5,7 +5,7 @@ import { FlowContext } from "./FlowContext";
 import { IChart } from "../ReactFlowChart";
 
 const SaveOrCloseWrapper = styled.div`
-    bottom: 0px;
+    top: 0px;
     right: 0px;
     position: fixed;
     z-index: 3;

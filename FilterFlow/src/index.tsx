@@ -31,7 +31,7 @@ export class App extends React.Component<AppProps, AppState> {
 
   componentDidMount() {
     this.props.sdk.window.startAutoResizer();
-
+    
     if(this.props.sdk.location.is(locations.LOCATION_ENTRY_FIELD)){
       var api = this.props.sdk as FieldExtensionSDK;
       this.detachExternalChangeHandler = api.field.onValueChanged(this.onExternalChange);
@@ -50,8 +50,6 @@ export class App extends React.Component<AppProps, AppState> {
 
 
   render = () => {
-    
-    
 
     if(this.props.sdk.location.is(locations.LOCATION_DIALOG)){
         var dialogSdk = this.props.sdk as DialogExtensionSDK
