@@ -22,13 +22,11 @@ export class DialogExtension extends React.Component {
 
   componentDidMount() {
     init(api => {
-      console.log("Invocation: ", api.parameters.invocation.contentTypes.join(','))
       api.space.getEntries({
         content_type: 'webpage',
         locale: 'sv',
         'fields.contentType.sv[in]': api.parameters.invocation.contentTypes.join(',')
       }).then(result => {
-        console.log("Result: ", result)
         this.setState({
           content: result.items
         })
@@ -41,6 +39,19 @@ export class DialogExtension extends React.Component {
   render() {
     return (
       <div style={{ margin: tokens.spacingM }}>
+
+        {this.state.content && this.state.content.map(item => {
+          console.log({ item })
+          return <EntryCard
+            key={item.sys.id}
+            title={item.fields.title.sv}
+            contentType={item.fields.contentType.sv}
+            withDragHandle={true}
+            size="small"
+          />
+        })}
+
+
         <Button
           testId="close-dialog"
           buttonType="muted"
