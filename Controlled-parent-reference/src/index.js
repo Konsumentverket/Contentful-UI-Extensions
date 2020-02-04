@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import { EntryCard, Icon, TextLink, Button } from '@contentful/forma-36-react-components';
+import { EntryCard, Icon, TextLink, Button, TextInput, DropdownList, DropdownListItem } from '@contentful/forma-36-react-components';
 import { init, locations } from 'contentful-ui-extensions-sdk';
 import tokens from '@contentful/forma-36-tokens';
+import Dragable from './Dragable'
+import Deleteable from './Deleteable'
 import '@contentful/forma-36-react-components/dist/styles.css';
 import './index.css';
 
@@ -16,47 +18,71 @@ export class DialogExtension extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      content: []
+      content: [],
+      filterInput: "",
     }
+    this.inputRef = React.createRef()
   }
 
   componentDidMount() {
+
     init(api => {
+      api.window.updateHeight(600)
+      console.log("API:", api.parameters.invocation.contentTypes)
       api.space.getEntries({
         content_type: 'webpage',
         locale: 'sv',
-        'fields.contentType.sv[in]': api.parameters.invocation.contentTypes.join(',')
+        'fields.contentType.sv[in]': api.parameters.invocation.contentTypes
       }).then(result => {
         this.setState({
-          content: result.items
+          content: result.items.filter((item) => item.fields.hasOwnProperty("contentType")),
         })
       })
     })
   }
 
+  inputChanged(event) {
+    this.setState({ filterInput: event.target.value }, () => console.log(this.state.filterInput))
+  }
 
+  select(item) {
+    this.props.sdk.close(item)
+  }
 
   render() {
+    let stateChange = this.state.content.filter(i => i.fields.title.sv.toLowerCase().includes(this.state.filterInput.toLowerCase()))
+
     return (
       <div style={{ margin: tokens.spacingM }}>
+        <TextInput
+          type="text"
+          onChange={(event) => this.inputChanged(event)}
+          ref={this.inputRef}
+          placeholder="Sök på titel"
+          style={{ marginBottom: 20 }}
+        />
 
-        {this.state.content && this.state.content.map(item => {
-          console.log({ item })
-          return <EntryCard
-            key={item.sys.id}
-            title={item.fields.title.sv}
-            contentType={item.fields.contentType.sv}
-            withDragHandle={true}
-            size="small"
-          />
-        })}
+        <div className="cards">
+          {stateChange && stateChange.map(item => {
+            return <EntryCard
+              key={item.sys.id}
+              title={item.fields.title.sv}
+              contentType={item.fields.contentType.sv}
+              withDragHandle={true}
+              size="small"
+              onClick={() => {
+                this.props.sdk.close(this.select(item));
+              }}
+            />
+          })}
+        </div>
 
 
         <Button
           testId="close-dialog"
           buttonType="muted"
           onClick={() => {
-            this.props.sdk.close(this.state.content);
+            this.props.sdk.close(null);
           }}>
           Close modal
         </Button>
@@ -81,6 +107,7 @@ export class App extends React.Component {
   }
 
   componentDidMount() {
+    console.log("Mount")
     this.props.sdk.window.startAutoResizer();
 
     // Handler for external field value changes (e.g. when multiple authors are working on the same entry).
@@ -89,6 +116,8 @@ export class App extends React.Component {
     init(extension => {
 
       let page = extension.entry
+
+      console.log("Field data: ", extension.field)
 
       if (page.fields.contentType) {
         let contentTypes = this.getAvailableParentContentTypes()
@@ -107,11 +136,10 @@ export class App extends React.Component {
   }
 
   getAvailableParentContentTypes() {
-    if (this.props.sdk.entry.fields.contentType) {
-      let availableContentTypes = this.props.sdk.parameters.instance.hasOwnProperty(this.props.sdk.entry.fields.contentType.getValue())
-        ? this.props.sdk.parameters.instance[this.props.sdk.entry.fields.contentType.getValue()].split(',')
-        : []
-      return availableContentTypes
+    let fields = this.props.sdk.field.items.validations[0].linkContentType
+    if (fields) {
+      console.log("Types: ", fields)
+      return fields
     }
     return []
   }
@@ -136,6 +164,35 @@ export class App extends React.Component {
     this.props.sdk.navigator.openEntry(id, { slideIn: true })
   }
 
+  onMove(fromIndex, toIndex) {
+    var newVal = [...this.state.value];
+    var element = newVal[fromIndex];
+    newVal.splice(fromIndex, 1);
+    newVal.splice(toIndex, 0, element);
+    this.setState({
+      value: newVal
+    }, function () {
+      //this.props.sdk.field.setValue(this.state.value);
+      console.log("Moved")
+    })
+  }
+
+  onRemove(index) {
+    var newVal = [...this.state.value];
+    newVal.splice(index, 1);
+    this.setState({
+      value: newVal
+    }, function () {
+      this.props.sdk.field.setValue(this.state.value);
+    })
+  }
+
+  fixContentTypes(contentTypes) {
+    let fixed = contentTypes.map(c => c.slice(0, 1).toUpperCase() + c.slice(1)).join(",")
+    console.log({ fixed })
+    return fixed
+  }
+
   async selectParentEntry() {
     /* this.props.sdk.dialogs.selectMultipleEntries({ contentTypes: ["webpage"] }).then(arrayOfSelectedEntries => {
       console.log({ arrayOfSelectedEntries })
@@ -145,29 +202,36 @@ export class App extends React.Component {
       }, console.log(this.state.value))
     }) */
     const result = await this.props.sdk.dialogs.openExtension({
-      width: 800,
-      title: 'The same extension rendered in modal window',
-      parameters: { contentTypes: this.state.contentTypes }
+      width: "large",
+      title: 'Välj överliggande sida',
+      parameters: { contentTypes: this.fixContentTypes(this.state.contentTypes), selectedItems: this.state.value ? this.state.value.map(v => v.sys.id) : [] }
     });
-    console.log(result);
+    result && this.setState({
+      value: this.state.value ? [...this.state.value, result] : [result]
+    }, () => console.log(this.state))
   }
 
   render() {
     let self = this
     return (
       <>
-        {self.state.value && self.state.value.map(item => {
-          return <EntryCard
-            key={item.sys.id}
-            title="Titel"
-            contentType="Innehållstyp"
-            withDragHandle={true}
-            size="small"
-            onClick={self.onClick.bind(self, this.id)}
-          />
+        {self.state.value && self.state.value.map((item, idx) => {
+          return <Dragable className="item" index={idx} onMove={this.onMove.bind(this)}>
+            <Deleteable onRemove={this.onRemove.bind(this)} index={idx}>
+              <EntryCard
+                key={item.sys.id}
+                title={item.fields.title.sv}
+                contentType={item.fields.contentType.sv}
+                withDragHandle={true}
+                size="small"
+                onClick={self.onClick.bind(self, item.id)}
+              />
+            </Deleteable>
+          </Dragable>
+
         })}
 
-        <TextLink onClick={self.selectParentEntry.bind(self)} iconPosition="left" icon="Link">Link parent items</TextLink>
+        <TextLink onClick={self.selectParentEntry.bind(self)} iconPosition="left" icon="Link">Link parent itemz</TextLink>
       </>
     );
   }
