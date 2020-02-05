@@ -3,7 +3,6 @@
   "name": "Controlled-parent-reference",
   "srcdoc": "./build/index.html",
   "fieldTypes": [
-    "Object",
     "Entries"
   ],
   "parameters": {

@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import { EntryCard, Icon, TextLink, Button, TextInput, DropdownList, DropdownListItem } from '@contentful/forma-36-react-components';
+import { EntryCard, TextLink, Button, TextInput } from '@contentful/forma-36-react-components';
 import { init, locations } from 'contentful-ui-extensions-sdk';
 import tokens from '@contentful/forma-36-tokens';
-import Dragable from './Dragable'
-import Deleteable from './Deleteable'
 import '@contentful/forma-36-react-components/dist/styles.css';
+import CardItem from './CardItem'
 import './index.css';
 
 
@@ -28,11 +27,11 @@ export class DialogExtension extends React.Component {
 
     init(api => {
       api.window.updateHeight(600)
-      console.log("API:", api.parameters.invocation.contentTypes)
       api.space.getEntries({
         content_type: 'webpage',
         locale: 'sv',
-        'fields.contentType.sv[in]': api.parameters.invocation.contentTypes
+        'fields.contentType.sv[in]': api.parameters.invocation.contentTypes,
+        'sys.id[nin]': api.parameters.invocation.selectedItems
       }).then(result => {
         this.setState({
           content: result.items.filter((item) => item.fields.hasOwnProperty("contentType")),
@@ -101,13 +100,13 @@ export class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: props.sdk.field.getValue() || new Array,
-      contentTypes: []
+      value: props.sdk.field.getValue() || [],
+      contentTypes: [],
+      selectedEntries: []
     };
   }
 
   componentDidMount() {
-    console.log("Mount")
     this.props.sdk.window.startAutoResizer();
 
     // Handler for external field value changes (e.g. when multiple authors are working on the same entry).
@@ -117,15 +116,14 @@ export class App extends React.Component {
 
       let page = extension.entry
 
-      console.log("Field data: ", extension.field)
-
       if (page.fields.contentType) {
         let contentTypes = this.getAvailableParentContentTypes()
-        this.setState({ contentTypes: contentTypes }, () => console.log(this.state.contentTypes))
+        this.setState({ contentTypes: contentTypes })
       }
       else {
         console.log("Could not set content types")
       }
+      this.getSelectedEntries(this.state.value)
     })
   }
 
@@ -135,103 +133,154 @@ export class App extends React.Component {
     }
   }
 
+  getSelectedEntries(stateItemArray) {
+    let itemIds = stateItemArray.map(item => item.sys.id)
+    this.props.sdk.space.getEntries({
+      content_type: 'webpage',
+      locale: 'sv',
+      'sys.id[in]': itemIds.join(",")
+    }).then(result => {
+      result.items.forEach(item => {
+        itemIds.splice(itemIds.indexOf(item.sys.id), 1, item)
+      })
+      this.setState({ selectedEntries: itemIds.filter(i => i.hasOwnProperty("sys")) })
+    })
+  }
+
   getAvailableParentContentTypes() {
-    let fields = this.props.sdk.field.items.validations[0].linkContentType
-    if (fields) {
-      console.log("Types: ", fields)
-      return fields
-    }
-    return []
+
+    const allowedTypes = this.props.sdk.field.items.validations.reduce((acc, val) => {
+      if (val.linkContentType) {
+        acc = acc.concat(val.linkContentType)
+      }
+      return acc
+    }, [])
+
+    return allowedTypes
   }
 
   onExternalChange = value => {
-    this.setState({ value });
+    if (value) {
+      this.setState({ value })
+    }
   };
-
-  onMove(fromIndex, toIndex) {
-    var newVal = [...this.state.value];
-    var element = newVal[fromIndex];
-    newVal.splice(fromIndex, 1);
-    newVal.splice(toIndex, 0, element);
-    this.setState({
-      value: newVal
-    }, function () {
-      this.props.sdk.field.setValue(this.state.value);
-    })
-  }
 
   onClick(id) {
     this.props.sdk.navigator.openEntry(id, { slideIn: true })
   }
 
-  onMove(fromIndex, toIndex) {
-    var newVal = [...this.state.value];
+  doMove(fromIndex, toIndex) {
+    var newVal = [...this.state.selectedEntries];
     var element = newVal[fromIndex];
     newVal.splice(fromIndex, 1);
     newVal.splice(toIndex, 0, element);
-    this.setState({
-      value: newVal
-    }, function () {
-      //this.props.sdk.field.setValue(this.state.value);
-      console.log("Moved")
-    })
+    this.saveItems(newVal)
+  }
+
+  doRemove(index) {
+    var newVal = [...this.state.selectedEntries];
+    let removed = newVal.splice(index, 1)
+    this.saveItems(newVal)
+  }
+
+  onMove(fromIndex, toIndex) {
+    let fi = parseInt(fromIndex, 10)
+    let ti = parseInt(toIndex, 10)
+    if (!fi || !ti) {
+      this.props.sdk.dialogs.openConfirm({
+        title: "Ändra primär förälder?",
+        message: "Den primära föräldern håller på att ändras. Detta kommer att påverka bl a canonical URL, brödsmula och övrig SEO.",
+        intent: "negative",
+        confirmLabel: "Ändra förälder",
+        cancelLabel: "Avbryt"
+      }).then(result => {
+        result && this.doMove(fi, ti)
+      })
+    }
+    else {
+      this.doMove(fi, ti)
+    }
   }
 
   onRemove(index) {
-    var newVal = [...this.state.value];
-    newVal.splice(index, 1);
-    this.setState({
-      value: newVal
-    }, function () {
-      this.props.sdk.field.setValue(this.state.value);
-    })
+    let idx = parseInt(index, 10)
+    if (!idx) {
+      this.props.sdk.dialogs.openConfirm({
+        title: "Ta bort primär förälder?",
+        message: "Den primära föräldern håller på att tas bort. Detta kommer att påverka bl a canonical URL, brödsmula och övrig SEO.",
+        intent: "negative",
+        confirmLabel: "Ta bort förälder",
+        cancelLabel: "Avbryt"
+      }).then(result => {
+        result && this.doRemove(idx)
+      })
+    }
+    else {
+      this.doRemove(idx)
+    }
+
   }
 
   fixContentTypes(contentTypes) {
     let fixed = contentTypes.map(c => c.slice(0, 1).toUpperCase() + c.slice(1)).join(",")
-    console.log({ fixed })
     return fixed
   }
 
+  createStateItem(item) {
+    let stateItem = {
+      sys: {
+        id: item.sys.id,
+        linkType: "Entry",
+        type: "Link"
+      }
+    }
+
+    return stateItem
+  }
+
   async selectParentEntry() {
-    /* this.props.sdk.dialogs.selectMultipleEntries({ contentTypes: ["webpage"] }).then(arrayOfSelectedEntries => {
-      console.log({ arrayOfSelectedEntries })
-      let newState = this.state.value || []
-      this.setState({
-        value: [...newState, ...arrayOfSelectedEntries]
-      }, console.log(this.state.value))
-    }) */
+
+    let selectedItems = this.state.value ? this.state.value.map(v => v.sys.id) : []
+
+    // Don't allow selecting this entry as its own parent..
+    selectedItems.push(this.props.sdk.entry.getSys().id)
+
     const result = await this.props.sdk.dialogs.openExtension({
       width: "large",
       title: 'Välj överliggande sida',
-      parameters: { contentTypes: this.fixContentTypes(this.state.contentTypes), selectedItems: this.state.value ? this.state.value.map(v => v.sys.id) : [] }
+      parameters: { contentTypes: this.fixContentTypes(this.state.contentTypes), selectedItems: selectedItems.join(',') }
     });
-    result && this.setState({
-      value: this.state.value ? [...this.state.value, result] : [result]
-    }, () => console.log(this.state))
+
+    if (result) {
+      let items = this.state.selectedEntries ? [...this.state.selectedEntries, result] : [result]
+      this.saveItems(items)
+
+    }
+  }
+
+  saveItems(selectedEntriesArray) {
+
+    let stateItems = selectedEntriesArray.map(item => this.createStateItem(item))
+
+    this.setState({
+      value: stateItems,
+      selectedEntries: selectedEntriesArray
+    }, function () {
+      this.props.sdk.field.setValue(this.state.value)
+        .catch(error => console.log("Error: ", error));
+    })
   }
 
   render() {
-    let self = this
+
     return (
       <>
-        {self.state.value && self.state.value.map((item, idx) => {
-          return <Dragable className="item" index={idx} onMove={this.onMove.bind(this)}>
-            <Deleteable onRemove={this.onRemove.bind(this)} index={idx}>
-              <EntryCard
-                key={item.sys.id}
-                title={item.fields.title.sv}
-                contentType={item.fields.contentType.sv}
-                withDragHandle={true}
-                size="small"
-                onClick={self.onClick.bind(self, item.id)}
-              />
-            </Deleteable>
-          </Dragable>
+        {this.state.selectedEntries && this.state.selectedEntries.map((item, idx) => {
+          return <CardItem key={item.sys.id} index={idx} onMove={this.onMove.bind(this)} onRemove={this.onRemove.bind(this)} onClick={this.onClick.bind(this)} item={item} />
 
         })}
 
-        <TextLink onClick={self.selectParentEntry.bind(self)} iconPosition="left" icon="Link">Link parent itemz</TextLink>
+        <TextLink onClick={this.selectParentEntry.bind(this)} iconPosition="left" icon="Link">Link parent itemz</TextLink>
       </>
     );
   }
@@ -251,6 +300,6 @@ init(initialize);
  * By default, iframe of the extension is fully reloaded on every save of a source file.
  * If you want to use HMR (hot module reload) instead of full reload, uncomment the following lines
  */
-if (module.hot) {
+/* if (module.hot) {
   module.hot.accept();
-}
+} */
