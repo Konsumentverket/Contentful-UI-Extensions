@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import { EntryCard, TextLink, Button, TextInput } from '@contentful/forma-36-react-components';
+import { EntryCard, TextLink, Button, TextInput, HelpText } from '@contentful/forma-36-react-components';
 import { init, locations } from 'contentful-ui-extensions-sdk';
 import tokens from '@contentful/forma-36-tokens';
 import '@contentful/forma-36-react-components/dist/styles.css';
@@ -65,10 +65,12 @@ export class DialogExtension extends React.Component {
 
         <div className="cards">
           {stateChange && stateChange.map(item => {
+            let contentContentTypeId = item.fields.contentType[this.locale].charAt(0).toLowerCase() + item.fields.contentType[this.locale].substring(1)
+            let contentTypeName = this.props.sdk.parameters.invocation.contentTypeNames[contentContentTypeId]
             return <EntryCard
               key={item.sys.id}
               title={item.fields.title[this.locale]}
-              contentType={item.fields.contentType[this.locale]}
+              contentType={contentTypeName || item.fields.contentType[this.locale]}
               withDragHandle={true}
               size="small"
               onClick={() => {
@@ -104,7 +106,8 @@ export class App extends React.Component {
     this.state = {
       value: props.sdk.field.getValue() || [],
       contentTypes: [],
-      selectedEntries: []
+      selectedEntries: [],
+      contentTypeNames: []
     };
   }
 
@@ -126,6 +129,18 @@ export class App extends React.Component {
         console.log("Could not set content types")
       }
       this.getSelectedEntries(this.state.value)
+
+      // Get content type names
+      if (!this.state.contentTypeNames.length) {
+        var ct = []
+        extension.space.getContentTypes().then(types => {
+          types.items.map(type => {
+            ct[type.sys.id] = type.name
+          })
+          this.setState({ contentTypeNames: ct }, () => { })
+        })
+      }
+
     })
   }
 
@@ -250,7 +265,7 @@ export class App extends React.Component {
     const result = await this.props.sdk.dialogs.openExtension({
       width: "large",
       title: 'Välj överliggande sida',
-      parameters: { contentTypes: this.fixContentTypes(this.state.contentTypes), selectedItems: selectedItems.join(',') }
+      parameters: { contentTypes: this.fixContentTypes(this.state.contentTypes), selectedItems: selectedItems.join(','), contentTypeNames: this.state.contentTypeNames }
     });
 
     if (result) {
@@ -278,11 +293,12 @@ export class App extends React.Component {
     return (
       <>
         {this.state.selectedEntries && this.state.selectedEntries.map((item, idx) => {
-          return <CardItem key={item.sys.id} locale={locale} index={idx} onMove={this.onMove.bind(this)} onRemove={this.onRemove.bind(this)} onClick={this.onClick.bind(this)} item={item} />
+          let contentContentTypeId = item.fields.contentType[locale].charAt(0).toLowerCase() + item.fields.contentType[locale].substring(1)
+          return <CardItem key={item.sys.id} contentTypeName={this.state.contentTypeNames[contentContentTypeId]} locale={locale} index={idx} onMove={this.onMove.bind(this)} onRemove={this.onRemove.bind(this)} onClick={this.onClick.bind(this)} item={item} />
 
         })}
-
-        <TextLink onClick={this.selectParentEntry.bind(this)} iconPosition="left" icon="Link">Link parent itemz</TextLink>
+        <HelpText>Överst placerade sidan är denna sidas huvudförälder. Upp till 3 sidor kan anges.</HelpText>
+        <TextLink onClick={this.selectParentEntry.bind(this)} iconPosition="left" icon="Link">Link parent page</TextLink>
       </>
     );
   }

@@ -15,7 +15,7 @@ export default class CardItem extends React.Component {
                 <EntryCard
                     key={item.sys.id}
                     title={item.fields.title[defaultLocale]}
-                    contentType={item.fields.contentType[defaultLocale]}
+                    contentType={this.props.contentTypeName || item.fields.contentType[defaultLocale]}
                     withDragHandle={true}
                     size="small"
                     onClick={() => this.props.onClick(item.sys.id)}
