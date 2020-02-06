@@ -20,17 +20,19 @@ export class DialogExtension extends React.Component {
       content: [],
       filterInput: "",
     }
+    this.locale = ""
     this.inputRef = React.createRef()
   }
 
   componentDidMount() {
 
     init(api => {
+      this.locale = api.locales.default
       api.window.updateHeight(600)
       api.space.getEntries({
         content_type: 'webpage',
         locale: 'sv',
-        'fields.contentType.sv[in]': api.parameters.invocation.contentTypes,
+        'fields.contentType[in]': api.parameters.invocation.contentTypes,
         'sys.id[nin]': api.parameters.invocation.selectedItems
       }).then(result => {
         this.setState({
@@ -41,7 +43,7 @@ export class DialogExtension extends React.Component {
   }
 
   inputChanged(event) {
-    this.setState({ filterInput: event.target.value }, () => console.log(this.state.filterInput))
+    this.setState({ filterInput: event.target.value })
   }
 
   select(item) {
@@ -49,7 +51,7 @@ export class DialogExtension extends React.Component {
   }
 
   render() {
-    let stateChange = this.state.content.filter(i => i.fields.title.sv.toLowerCase().includes(this.state.filterInput.toLowerCase()))
+    let stateChange = this.state.content.filter(i => i.fields.title[this.locale].toLowerCase().includes(this.state.filterInput.toLowerCase()))
 
     return (
       <div style={{ margin: tokens.spacingM }}>
@@ -65,8 +67,8 @@ export class DialogExtension extends React.Component {
           {stateChange && stateChange.map(item => {
             return <EntryCard
               key={item.sys.id}
-              title={item.fields.title.sv}
-              contentType={item.fields.contentType.sv}
+              title={item.fields.title[this.locale]}
+              contentType={item.fields.contentType[this.locale]}
               withDragHandle={true}
               size="small"
               onClick={() => {
@@ -272,11 +274,11 @@ export class App extends React.Component {
   }
 
   render() {
-
+    let locale = this.props.sdk.locales.default
     return (
       <>
         {this.state.selectedEntries && this.state.selectedEntries.map((item, idx) => {
-          return <CardItem key={item.sys.id} index={idx} onMove={this.onMove.bind(this)} onRemove={this.onRemove.bind(this)} onClick={this.onClick.bind(this)} item={item} />
+          return <CardItem key={item.sys.id} locale={locale} index={idx} onMove={this.onMove.bind(this)} onRemove={this.onRemove.bind(this)} onClick={this.onClick.bind(this)} item={item} />
 
         })}
 
