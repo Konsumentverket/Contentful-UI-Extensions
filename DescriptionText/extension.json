@@ -1,0 +1,34 @@
+{
+  "id": "DescriptionText",
+  "name": "DescriptionText",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Symbol",
+    "Text"
+  ],
+  "parameters": {
+    "instance": [
+      {
+        "id": "editRights",
+        "type": "Symbol",
+        "name": "Edit Rights",
+        "description": "separate with commas",
+        "required": true
+      },
+      {
+        "id": "boxColor",
+        "name": "Box Color",
+        "description": "Set box color",
+        "type": "Enum",
+        "options": [
+          { "negative": "Red" },
+          { "warning": "Yellow" },
+          { "primary": "Blue"},
+          { "positive":  "Green"}
+        ],
+        "labels": { "empty": "Default (Blue)" },
+        "required": false
+      }
+    ]
+  }
+}
