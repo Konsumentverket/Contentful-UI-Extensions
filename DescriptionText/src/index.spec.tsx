@@ -1,4 +1,7 @@
-import React from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import * as React from 'react';
+import { FieldExtensionSDK } from 'contentful-ui-extensions-sdk';
 import { App } from './index';
 import { render, fireEvent, cleanup, configure } from '@testing-library/react';
 
@@ -6,11 +9,11 @@ configure({
   testIdAttribute: 'data-test-id'
 });
 
-function renderComponent(sdk) {
+function renderComponent(sdk: FieldExtensionSDK) {
   return render(<App sdk={sdk} />);
 }
 
-const sdk = {
+const sdk: any = {
   field: {
     getValue: jest.fn(),
     onValueChanged: jest.fn(),
@@ -35,7 +38,7 @@ describe('App', () => {
 
     expect(sdk.field.getValue).toHaveBeenCalled();
     expect(sdk.field.onValueChanged).toHaveBeenCalled();
-    expect(getByTestId('my-field').value).toEqual('initial-value');
+    expect((getByTestId('my-field') as HTMLInputElement).value).toEqual('initial-value');
   });
 
   it('should call starstartAutoResizer', () => {
