@@ -1,0 +1,8 @@
+{
+  "id": "LanguageDropdown",
+  "name": "LanguageDropdown",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Symbol"
+  ]
+}
