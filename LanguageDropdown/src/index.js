@@ -6,16 +6,16 @@ import '@contentful/forma-36-react-components/dist/styles.css';
 import './index.css';
 
 const supportedLangs = {
-  EN :"Engelska",
+  EN:"Engelska",
   AR:"Arabiska",
   ES:"Spanska"  ,
   FI:"Finska",
   TR:"Turkiska",
-  "BS/HR/SR":"Bosniska/Kroatiska/Serbiska",
-  KU :"Nordkurdiska (latinskt) (Kurmancî)",
+  BS:"Bosniska/Kroatiska/Serbiska",
+  KU:"Nordkurdiska (latinskt) (Kurmancî)",
   SO:"Somaliska",
   SMI:"Samiska",
-  KU :"Sorani",
+  KU:"Sorani",
   ROM:"Romani",
   FIU:"Meänkieli",
   TI:"Tigrinska",
@@ -67,8 +67,8 @@ export class App extends React.Component {
 
   render() {
     return <select onChange={this.onChange.bind(this)}>
-      <option>Välj ett språk</option>
-      { Object.keys(supportedLangs).map(x => <option key={x} value={x}>{supportedLangs[x]}</option>) }
+      <option value="">Välj ett språk</option>
+      { Object.keys(supportedLangs).map(x => <option selected={this.state.value == x ? true : null} key={x} value={x}>{supportedLangs[x]}</option>) }
 
     </select>
     
