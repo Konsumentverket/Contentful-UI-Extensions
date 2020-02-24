@@ -39,9 +39,10 @@ export class App extends React.Component {
 
     // Get entries that link to this entry
     init(extension => {
+
       const defaultLocale = extension.locales.default;
-      const parentRef = extension.entry.fields.parentReference.getValue()
-      const currentItemParentId = parentRef && parentRef.sys.id;
+      const parentRefs = extension.entry.fields.parentReferences.getValue()
+      const currentItemParentIds = parentRefs.length && parentRefs.map(ref => ref.sys.id)
       const currentEntryId = extension.entry.getSys().id
       var stateItems = this.state.value ? [...this.state.value] : []
 
@@ -70,16 +71,19 @@ export class App extends React.Component {
           this.asyncForEach(data.items, async (item) => {
 
             // Check if this entrys parent is also a child and warn about it
-            currentItemParentId && item.sys.id === currentItemParentId && extension.notifier.error("Denna sidas 'Referens till föregående sida' finns även med som underliggande sida");
+            currentItemParentIds.length && currentItemParentIds.includes(item.sys.id) && extension.notifier.error("Denna sidas 'Referens till föregående sida' finns även med som underliggande sida");
 
             // Make sure the relation is as a child to this parent
-            let isTrueChild = item.fields.parentReference && item.fields.parentReference[defaultLocale].sys.id === currentEntryId
+            let parentIds = item.fields.parentReferences && item.fields.parentReferences[defaultLocale].map(i => i.sys.id)
+            let isTrueChild = parentIds && parentIds.length && parentIds.includes(currentEntryId)
 
             if (isTrueChild && !currentItemIds.includes(item.sys.id)) {
-              let contentType = this.state.contentTypes[item.sys.contentType.sys.id] || "";
+              let containerType = this.state.contentTypes[item.sys.contentType.sys.id] || ""
+              let contentContentTypeName = item.fields.contentType[defaultLocale].charAt(0).toLowerCase() + item.fields.contentType[defaultLocale].substring(1)
+              let innerContentType = this.state.contentTypes[contentContentTypeName] || "not found"
               stateItems.push({
                 'id': item.sys.id,
-                'contentTypeName': contentType,
+                'contentTypeName': containerType + " med " + innerContentType,
                 'title': item.fields.title ? item.fields.title[defaultLocale] : item.fields.headline[defaultLocale],
                 'order': stateItems.length,
               });
@@ -142,16 +146,6 @@ export class App extends React.Component {
     this.props.sdk.navigator.openEntry(id, { slideIn: true })
   }
 
-  clearItems() {
-    this.setState(({
-      value: []
-    }), function () {
-      this.props.sdk.field.setValue(this.state.value);
-    });
-    return false;
-  }
-
-
   render() {
     var self = this;
     var items = this.state.value && this.state.value.map(function (e, i) {
@@ -169,7 +163,6 @@ export class App extends React.Component {
     return (
       <>
         {items}
-        <TextLink text="Töm listan" onClick={this.clearItems.bind(this)} />
       </>
     );
   }
