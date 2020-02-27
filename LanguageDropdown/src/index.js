@@ -6,20 +6,21 @@ import '@contentful/forma-36-react-components/dist/styles.css';
 import './index.css';
 
 const supportedLangs = {
-  EN:"Engelska",
-  AR:"Arabiska",
-  ES:"Spanska"  ,
-  FI:"Finska",
-  TR:"Turkiska",
-  BS:"Bosniska/Kroatiska/Serbiska",
-  KU:"Nordkurdiska (latinskt) (Kurmancî)",
-  SO:"Somaliska",
-  SMI:"Samiska",
-  KU:"Sorani",
-  ROM:"Romani",
-  FIU:"Meänkieli",
-  TI:"Tigrinska",
-  YI:"Jiddisch"
+  en: "Engelska",
+  ar: "Arabiska",
+  es: "Spanska",
+  fi: "Finska",
+  pl: "Polska",
+  bs: "Bosniska/Kroatiska/Serbiska",
+  ku: "Nordkurdiska (kurmanji)",
+  so: "Somaliska",
+  fa: "Persiska",
+  ku: "Centralkurdiska (sorani)",
+  ti: "Tigrinska",
+  yi: "Jiddisch",
+  fiu: "Meänkieli",
+  rom: "Romska",
+  se: "Samiska"
 }
 
 export class App extends React.Component {
