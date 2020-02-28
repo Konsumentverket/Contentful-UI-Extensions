@@ -31,7 +31,7 @@ export class DialogExtension extends React.Component {
       api.window.updateHeight(600)
       api.space.getEntries({
         content_type: 'webpage',
-        locale: 'sv',
+        locale: this.locale,
         'fields.contentType[in]': api.parameters.invocation.contentTypes,
         'sys.id[nin]': api.parameters.invocation.selectedItems
       }).then(result => {
@@ -152,9 +152,10 @@ export class App extends React.Component {
 
   getSelectedEntries(stateItemArray) {
     let itemIds = stateItemArray.map(item => item.sys.id)
+    let locale = this.props.sdk.locales.default
     this.props.sdk.space.getEntries({
       content_type: 'webpage',
-      locale: 'sv',
+      locale: locale,
       'sys.id[in]': itemIds.join(",")
     }).then(result => {
       result.items.forEach(item => {
