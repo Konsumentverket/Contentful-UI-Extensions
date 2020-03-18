@@ -28,7 +28,6 @@ class App extends React.Component {
 
   componentDidMount() {
     this.props.sdk.window.startAutoResizer();
-    console.log(this.state.value)
     let headlineField = this.props.sdk.entry.fields["headline"]
     //if no initial value is set, autogenerate slug based on it
     if (this.state.initialValue == null && headlineField) {

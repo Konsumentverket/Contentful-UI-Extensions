@@ -42,7 +42,7 @@ export class App extends React.Component {
 
       const defaultLocale = extension.locales.default;
       const parentRefs = extension.entry.fields.parentReferences.getValue()
-      const currentItemParentIds = parentRefs.length && parentRefs.map(ref => ref.sys.id)
+      const currentItemParentIds = parentRefs && parentRefs.length && parentRefs.map(ref => ref.sys.id) || []
       const currentEntryId = extension.entry.getSys().id
       var stateItems = this.state.value ? [...this.state.value] : []
 
@@ -51,6 +51,9 @@ export class App extends React.Component {
       }) : []
 
       var fetchedItemIds = [];
+
+
+      console.log(currentEntryId)
 
       extension.space.getEntries({
         links_to_entry: currentEntryId
