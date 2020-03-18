@@ -1,0 +1,17 @@
+{
+  "id": "Controlled-parent-reference",
+  "name": "Controlled-parent-reference",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Entries"
+  ],
+  "parameters": {
+    "instance": [
+      {
+        "id": "linkCollectionPage",
+        "type": "Symbol",
+        "name": "Genomgångssida"
+      }
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+html,
+body,
+div {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+.item{
+  margin-bottom: 15px;
+  position: relative;
+  min-height: 15px;
+}
+
+.item .dragIcon{
+  position: absolute;
+  top: 35px;
+  left: 0px;
+}
+
+.item-actions{
+  position: absolute;
+  z-index: 1;
+  right: 15px;
+  top: 15px;
+}
