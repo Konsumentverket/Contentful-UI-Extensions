@@ -51,7 +51,7 @@ export class DialogExtension extends React.Component {
   }
 
   render() {
-    let stateChange = this.state.content.filter(i => i.fields.title[this.locale].toLowerCase().includes(this.state.filterInput.toLowerCase()))
+    let stateChange = this.state.content.filter(i => i.fields.title && i.fields.title[this.locale].toLowerCase().includes(this.state.filterInput.toLowerCase()))
 
     return (
       <div style={{ margin: tokens.spacingM }}>
