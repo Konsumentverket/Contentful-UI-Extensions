@@ -1,0 +1,24 @@
+html,
+body,
+div {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+
+.empty{
+  margin-top: 0.75rem;
+}
+
+.empty button{
+  margin-right: 20px;
+}
+
+.hasValue{
+  position: relative;
+  min-height: 150px;
+}

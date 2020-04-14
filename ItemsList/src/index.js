@@ -55,6 +55,7 @@ class App extends React.Component {
           name:"",
           information:"",
           europeanCompany:false,
+          link: "",
           id: v4()
         }
       case "DeniedReasons":
