@@ -9,10 +9,17 @@
   "parameters": {
     "instance": [
       {
+        "id": "contentfulId",
+        "type": "Symbol",
+        "name": "Contentful Id",
+        "description": "Id till hjälptexten",
+        "required": false
+      },
+      {
         "id": "editRights",
         "type": "Symbol",
         "name": "Edit Rights",
-        "description": "separate with commas",
+        "description": "De som ska ha rätt att editera texten, separerea med kommatecken.",
         "required": true
       },
       {
@@ -21,10 +28,10 @@
         "description": "Set box color",
         "type": "Enum",
         "options": [
-          { "negative": "Red" },
-          { "warning": "Yellow" },
-          { "primary": "Blue"},
-          { "positive":  "Green"}
+          { "#e8f7ff": "Blue"},
+          { "#fbe3e2": "Red" },
+          { "#ffe9cc": "Yellow" },
+          { "#f4fffb":  "Green"}
         ],
         "labels": { "empty": "Default (Blue)" },
         "required": false
