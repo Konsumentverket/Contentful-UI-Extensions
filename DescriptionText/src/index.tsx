@@ -1,11 +1,8 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
-// import { Button, Textarea, Note } from '@contentful/forma-36-react-components'
 import { FieldExtensionSDK, init } from 'contentful-ui-extensions-sdk'
-// import '@contentful/forma-36-react-components/dist/styles.css'
 import './index.css'
 import Markdown from 'markdown-to-jsx'
-// import { NoteProps } from "@contentful/forma-36-react-components/dist/components/Note/Note"
 import { createClient, Entry }  from "contentful"
 import env from './env.json'
 
@@ -33,8 +30,6 @@ const App = ({ sdk }: AppProps) => {
   const space = sdk.ids.space
 
   const isUsingExternalDoc = contentfulId !== 'none'
-  console.log(contentfulId)
-  console.log(isUsingExternalDoc)
 
   const client = createClient({
     space: space,
@@ -72,7 +67,7 @@ const App = ({ sdk }: AppProps) => {
           setValue(entry.fields.documentation))
         .catch(err => console.log(err))
     } else {
-      setValue(sdk.field.getValue())
+      setValue(sdk.field.getValue() ?? '')
     }
   }, [])
 
