@@ -1,11 +1,10 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
-import { Button, Textarea, Note } from '@contentful/forma-36-react-components';
-import { FieldExtensionSDK, init } from 'contentful-ui-extensions-sdk';
-import '@contentful/forma-36-react-components/dist/styles.css';
-import './index.css';
-import Markdown from 'markdown-to-jsx';
-import { NoteProps } from "@contentful/forma-36-react-components/dist/components/Note/Note";
+import React, { ChangeEvent, useEffect, useState } from 'react'
+import ReactDOM from 'react-dom'
+import { FieldExtensionSDK, init } from 'contentful-ui-extensions-sdk'
+import './index.css'
+import Markdown from 'markdown-to-jsx'
+import { createClient, Entry }  from "contentful"
+import env from './env.json'
 
 interface AppProps {
   sdk: FieldExtensionSDK & InstanceVariables;
@@ -14,45 +13,72 @@ interface AppProps {
 interface InstanceVariables {
   parameters: {
     instance: {
-      boxColor?: NoteProps['noteType']
-      editRights?: string;
+      boxColor?: string
+      editRights?: string
+      contentfulId?: string
     }
   }
 }
 
 const App = ({ sdk }: AppProps) => {
-  const boxColor = sdk.parameters.instance.boxColor ?? 'primary';
+  const [value, setValue] = useState('')
+  const [edit, setEdit] = useState(false)
+
+  const boxColor = sdk.parameters.instance.boxColor ?? 'primary'
+  const contentfulId = sdk.parameters.instance.contentfulId ?? 'none'
+  const environment = sdk.ids.environment
+  const space = sdk.ids.space
+
+  const isUsingExternalDoc = contentfulId !== 'none'
+
+  const client = createClient({
+    space: space,
+    environment: environment,
+    accessToken: env.accessToken
+  });
+
 
   const editorRoles = (sdk.parameters.instance.editRights ?? '')
     .split(',')
-    .map(ed => ed.toLowerCase().trim());
-  const isEditor = sdk.user.spaceMembership.admin || (sdk.user.spaceMembership.roles ?? [])
-    .some(r => editorRoles.includes(r.name.toLowerCase()));
+    .map(ed => ed.toLowerCase().trim())
 
-  const [value, setValue] = useState(sdk.field.getValue() ?? '');
-  const [edit, setEdit] = useState(false);
+  const isEditor = sdk.user.spaceMembership.admin || (sdk.user.spaceMembership.roles ?? [])
+    .some(r => editorRoles.includes(r.name.toLowerCase()))
+
 
   useEffect(() => {
-    sdk.window.startAutoResizer();
+    sdk.window.startAutoResizer()
 
-    const noop = () => { };
-    const detachExternalChangeHandler = sdk.field.onValueChanged(noop);
+    const noop = () => { }
+    const detachExternalChangeHandler = sdk.field.onValueChanged(noop)
 
     return () => {
       if (detachExternalChangeHandler) {
-        detachExternalChangeHandler();
+        detachExternalChangeHandler()
       }
     }
   }, []);
 
+  useEffect(() => {
+    if (isUsingExternalDoc) {
+      client
+        .getEntry(contentfulId)
+        .then((entry: Entry<any>) => 
+          setValue(entry.fields.documentation))
+        .catch(err => console.log(err))
+    } else {
+      setValue(sdk.field.getValue() ?? '')
+    }
+  }, [])
+
   const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.currentTarget.value;
-    setValue(value);
-    value ? sdk.field.setValue(value) : sdk.field.removeValue();
+    const value = e.currentTarget.value
+    setValue(value)
+    value ? sdk.field.setValue(value) : sdk.field.removeValue()
   };
 
   const Description = () => (
-    <Note noteType={boxColor} className='myNote'>
+    <div className='note' style={{ backgroundColor: boxColor }}>
       <Markdown
         children={value}
         options={{
@@ -61,36 +87,39 @@ const App = ({ sdk }: AppProps) => {
           }
         }}
       />
-    </Note>
+    </div>
   );
 
   return (
     <div>
-      {isEditor && <Button className='editButton' onClick={() => setEdit(!edit)}>Edit</Button>}
       {(edit && isEditor) ? (
-        <Textarea
-          rows={8}
+        <><textarea
+          rows={10}
+          cols={80}
           id='editArea'
-          testId='editArea-test'
           name='editArea'
           value={value}
           onChange={onChange}
-        />
+        /><br/></>
       ) : (
           <Description />
         )}
+      {isEditor &&
+        <button
+          className='editButton'
+          onClick={() => {
+            if (isUsingExternalDoc) {
+              window.open(`https://app.contentful.com/spaces/${space}/environments/${environment}/entries/${contentfulId}`)
+            } else {
+              setEdit(!edit)
+            }
+          }}>
+        Edit
+      </button>}
     </div>
-  );
-};
+  )
+}
 
 init(sdk => {
   ReactDOM.render(<App sdk={sdk as FieldExtensionSDK} />, document.getElementById('root'));
-});
-
-/**
- * By default, iframe of the extension is fully reloaded on every save of a source file.
- * If you want to use HMR (hot module reload) instead of full reload, uncomment the following lines
- */
-// if (module.hot) {
-//   module.hot.accept();
-// }
+})

@@ -77,7 +77,8 @@ Github pages url: [https://konsumentverket.github.io/Contentful-UI-Extensions/Fi
 }
 ```
 
-
+## DescriptionText
+This extension is used for documentation for editors in Contentful.
 
 
 

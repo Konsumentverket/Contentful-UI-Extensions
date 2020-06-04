@@ -19,5 +19,21 @@ div {
 }
 
 .editButton {
-  margin-bottom: 2px;
+  margin-top: 5px;
+  background-color: #12cd8e; /* Green */
+  border: 1px solid #0baa75;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.note {
+  width: 95%;
+  padding: 2px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border: 2px solid rgba(0,0,0, 0.25);
 }
