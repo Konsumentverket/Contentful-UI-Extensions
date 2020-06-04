@@ -12,7 +12,7 @@ export const App = ({sdk}) => {
   useEffect(() => {
     sdk.window.updateHeight(360)
 
-    fetch("http://api.kontaktregistret.kov.se/api/occupation/getalloccupations/2",{
+    fetch("https://api.kontaktregistret.kov.se/api/occupation/getalloccupations/2",{
       method: 'GET',
       mode: 'cors',
       cache: 'no-cache',
