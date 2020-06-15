@@ -11,6 +11,7 @@ class AirlineListItem extends Component {
         this.state = {
             name: props.item.name,
             information: props.item.information,
+            link: props.item.link,
             europeanCompany: props.item.europeanCompany
         }
     }
@@ -26,6 +27,7 @@ class AirlineListItem extends Component {
             this.props.onChange({
                 name: this.state.name,
                 information: this.state.information,
+                link: this.state.link,
                 europeanCompany: this.state.europeanCompany
             },this.props.index)
         });
@@ -45,6 +47,8 @@ class AirlineListItem extends Component {
                         <FormLabel className="item-inputlabel" htmlFor={`information${this.props.index}`}>Information</FormLabel>
                         <Textarea id={`information${this.props.index}`} name="information" placeholder="Information" value={this.state.information} className="item-input" onChange={this.onChange.bind(this)} />
 
+                        <FormLabel className="item-inputlabel" htmlFor={`link${this.props.index}`}>Länk</FormLabel>
+                        <TextInput id={`link${this.props.index}`} autoComplete="false" name="link" placeholder="Länk" value={this.state.link} className="item-input" onChange={this.onChange.bind(this)} />
 
                         <CheckboxField id={`europeanCompany${this.props.index}`} className="item-input checkbox" name="europeanCompany" labelText="Ifrån EU?" checked={this.state.europeanCompany} onChange={this.onChange.bind(this)} />
                     </Deleteable>

@@ -1,0 +1,16 @@
+{
+  "id": "WebPageReference",
+  "name": "WebPageReference",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Entry"
+  ],
+  "parameters": {
+    "instance": [{
+        "id": "allowedTypes",
+        "type": "Symbol",
+        "name": "Tillåtna typer"
+      }
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "contactRegisterOccupationSelector",
+  "name": "contactRegisterOccupationSelector",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Symbol"
+  ]
+}
