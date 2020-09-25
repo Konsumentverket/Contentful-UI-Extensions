@@ -23,58 +23,58 @@ class App extends React.Component {
   componentWillUnmount() {
   }
 
-  getPresetAndReplaceValues () {
-    const contentTypeName = this.state.api.contentType.name
+  getPresetAndReplaceValues() {
+    const contentTypeName = this.state.api.contentType.sys.id
     this.state.api.space.getEntries({
       content_type: contentTypeName,
-      'query':'[mall]'
+      'query': '[mall]'
     }).then(data => {
       if (data.items.length === 0)
         throw new Error('No entries')
 
       const arr = []
       Object.entries(data.items[0].fields).forEach(([key, value]) => {
-        arr.push({ key: key, value: value})
+        arr.push({ key: key, value: value })
       })
 
       return Promise.each(arr, obj => {
         return new Promise((resolve, reject) => {
           const { key, value } = obj
           if (this.state.api.entry.fields[key].getValue() !== undefined) {
-              this.showDialog(key)
+            this.showDialog(key)
               .then(result => {
                 if (result) {
-                  this.state.api.entry.fields[key].setValue(this.removeMallFromString(value['en-US']))
+                  this.state.api.entry.fields[key].setValue(this.removeMallFromString(value['sv']))
                 }
                 resolve()
               })
           } else {
-            this.state.api.entry.fields[key].setValue(this.removeMallFromString(value['en-US']))
+            this.state.api.entry.fields[key].setValue(this.removeMallFromString(value['sv']))
             resolve()
           }
         })
       })
     }).then(data => console.log(data))
-    .catch(e => {
-      if (e.message === 'No entries') {
-        this.showErrorAlert()
-      } else {
-        console.log(e)
-      }
-    })
+      .catch(e => {
+        if (e.message === 'No entries') {
+          this.showErrorAlert()
+        } else {
+          console.log(e)
+        }
+      })
   }
 
   showDialog(key) {
     return this.state.api.dialogs.openConfirm({
-        title: 'Värdet redan ifyllt för ' + key,
-        message: 'Är du säker på att du vill skriva över?',
-        intent: 'positive',
-        confirmLabel: 'Ja',
-        cancelLabel: 'Nej'
-      })
+      title: 'Värdet redan ifyllt för ' + key,
+      message: 'Är du säker på att du vill skriva över?',
+      intent: 'positive',
+      confirmLabel: 'Ja',
+      cancelLabel: 'Nej'
+    })
   }
 
-  showErrorAlert () {
+  showErrorAlert() {
     this.state.api.dialogs.openAlert({
       title: 'Fel',
       message: 'Kunde inte hitta en mall',
