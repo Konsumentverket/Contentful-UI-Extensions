@@ -5,7 +5,7 @@
   "dependencies": {
     "@contentful/field-editor-date": "^0.8.3",
     "@contentful/forma-36-fcss": "^0.0.18",
-    "@contentful/forma-36-react-components": "^3.64.4",
+    "@contentful/forma-36-react-components": "^3.66.1",
     "@contentful/forma-36-tokens": "^0.3.0",
     "contentful-ui-extensions-sdk": "3.8.0",
     "prop-types": "^15.7.2",

@@ -16,5 +16,5 @@ yarn-error.log*
 node_modules/
 
 # Build
-build/*
-!/build/index.html
+# build/*
+# !/build/index.html
