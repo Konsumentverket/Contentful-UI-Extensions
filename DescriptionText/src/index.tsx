@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { FieldExtensionSDK, init } from 'contentful-ui-extensions-sdk'
 import './index.css'
 import Markdown from 'markdown-to-jsx'
-import { createClient, Entry }  from "contentful"
+import { createClient, Entry } from "contentful"
 import env from './env.json'
 
 interface AppProps {
@@ -31,9 +31,14 @@ const App = ({ sdk }: AppProps) => {
 
   const isUsingExternalDoc = contentfulId !== 'none'
 
+  // console.log(sdk)
+  // if (environment === 'prod-200323') {
+  //   environment = 'master'
+  // }
+
   const client = createClient({
     space: space,
-    environment: environment,
+    // environment: environment,
     accessToken: env.accessToken
   });
 
@@ -63,7 +68,7 @@ const App = ({ sdk }: AppProps) => {
     if (isUsingExternalDoc) {
       client
         .getEntry(contentfulId)
-        .then((entry: Entry<any>) => 
+        .then((entry: Entry<any>) =>
           setValue(entry.fields.documentation))
         .catch(err => console.log(err))
     } else {
@@ -100,7 +105,7 @@ const App = ({ sdk }: AppProps) => {
           name='editArea'
           value={value}
           onChange={onChange}
-        /><br/></>
+        /><br /></>
       ) : (
           <Description />
         )}
@@ -114,7 +119,7 @@ const App = ({ sdk }: AppProps) => {
               setEdit(!edit)
             }
           }}>
-        Edit
+          Edit
       </button>}
     </div>
   )

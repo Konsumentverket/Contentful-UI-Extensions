@@ -31,6 +31,7 @@ export class DialogExtension extends React.Component {
       api.window.updateHeight(600)
       api.space.getEntries({
         content_type: 'webpage',
+        limit: 400,
         locale: this.locale,
         'fields.contentType[in]': api.parameters.invocation.contentTypes,
         'sys.id[nin]': api.parameters.invocation.selectedItems
