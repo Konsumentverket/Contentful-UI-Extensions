@@ -25,7 +25,7 @@ export default ({settings}) => {
     useEffect(()=>{
 
         const credentials = new Buffer.from(`${settings.ElasticsearchUserName}:${settings.ElasticsearchPassword}`).toString('base64')
-        fetch(`${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_count`,{     
+        fetch(`http://cors.io/?${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_count`,{     
             headers:{
                 "Accept": "application/json",
                 "Content-Type": "application/json",

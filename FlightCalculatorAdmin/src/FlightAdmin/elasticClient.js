@@ -18,7 +18,7 @@ export const addTerm = (settings, idToEdit, term) => {
     };
 
 
-    return fetch(`${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_doc/${idToEdit}/_update`, {
+    return fetch(`http://cors.io/?${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_doc/${idToEdit}/_update`, {
         method: "POST",
         body: JSON.stringify(query),
         headers: {
@@ -43,7 +43,7 @@ export const removeTerm = (settings, idToEdit, term) => {
         }
     };
 
-    return fetch(`${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_doc/${idToEdit}/_update`, {
+    return fetch(`http://cors.io/?${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_doc/${idToEdit}/_update`, {
         method: "POST",
         body: JSON.stringify(query),
         headers: {
@@ -74,7 +74,7 @@ export const search = (settings, query) => {
         }
     }
 
-    return fetch(`${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_search`, {
+    return fetch(`http://cors.io/?${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_search`, {
         method: "POST",
         body: JSON.stringify(query),
         headers: {
@@ -90,7 +90,7 @@ export const search = (settings, query) => {
 
 
 export const getAirports = (settings) => {
-    return fetch("https://raw.githubusercontent.com/Konsumentverket/Airports/master/airports.json")
+    return fetch("http://cors.io/?https://raw.githubusercontent.com/Konsumentverket/Airports/master/airports.json")
         .then(response => response.json())
 }
 
