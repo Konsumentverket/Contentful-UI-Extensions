@@ -23,6 +23,7 @@ export const addTerm = (settings, idToEdit, term) => {
         body: JSON.stringify(query),
         mode: 'no-cors',
         headers: {
+            "Access-Control-Allow-Origin":"*",
             "Accept": "application/json",
             "Content-Type": "application/json",
             'Authorization': `Basic ${getCredentials(settings)}`
@@ -49,6 +50,7 @@ export const removeTerm = (settings, idToEdit, term) => {
         body: JSON.stringify(query),
         mode: 'no-cors',
         headers: {
+            "Access-Control-Allow-Origin":"*",
             "Accept": "application/json",
             "Content-Type": "application/json",
             'Authorization': `Basic ${getCredentials(settings)}`
@@ -81,6 +83,7 @@ export const search = (settings, query) => {
         body: JSON.stringify(query),
         mode: 'no-cors',
         headers: {
+            "Access-Control-Allow-Origin":"*",
             "Accept": "application/json",
             "Content-Type": "application/json",
             'Authorization': `Basic ${getCredentials(settings)}`
@@ -94,7 +97,10 @@ export const search = (settings, query) => {
 
 export const getAirports = (settings) => {
     return fetch("https://cors.io/?https://raw.githubusercontent.com/Konsumentverket/Airports/master/airports.json", {
-        mode: 'no-cors'
+        mode: 'no-cors',
+        headers:{
+            "Access-Control-Allow-Origin":"*"
+        }
     })
     .then(response => response.json())
 }
@@ -190,6 +196,7 @@ export const createIndex = (settings) => {
         body: JSON.stringify(query),
         mode: 'no-cors',
         headers: {
+            "Access-Control-Allow-Origin":"*",
             "Accept": "application/json",
             "Content-Type": "application/json",
             'Authorization': `Basic ${getCredentials(settings)}`
@@ -205,6 +212,7 @@ export const aliasExists = (settings) =>{
         method: "HEAD",
         mode: 'no-cors',
         headers: {
+            "Access-Control-Allow-Origin":"*",
             "Accept": "application/json",
             "Content-Type": "application/json",
             'Authorization': `Basic ${getCredentials(settings)}`
@@ -228,6 +236,7 @@ export const reIndexOnServer = (settings, newIndex) => {
         mode: 'no-cors',
         body: JSON.stringify(query),
         headers: {
+            "Access-Control-Allow-Origin":"*",
             "Accept": "application/json",
             "Content-Type": "application/json",
             'Authorization': `Basic ${getCredentials(settings)}`
@@ -257,6 +266,7 @@ export const reIndexAirports = (settings, airports, newIndex) => {
         mode: 'no-cors',
         body: requestStr,
         headers: {
+            "Access-Control-Allow-Origin":"*",
             "Accept": "application/json",
             "Content-Type": "application/json",
             'Authorization': `Basic ${getCredentials(settings)}`
@@ -276,6 +286,7 @@ export const saveCustomName = (settings,customName,iata) => {
             }
         }),
         headers: {
+            "Access-Control-Allow-Origin":"*",
             "Accept": "application/json",
             "Content-Type": "application/json",
             'Authorization': `Basic ${getCredentials(settings)}`
@@ -299,6 +310,7 @@ export const switchAlias = (settings, newIndex) => {
             }
         ),
         headers: {
+            "Access-Control-Allow-Origin":"*",
             "Accept": "application/json",
             "Content-Type": "application/json",
             'Authorization': `Basic ${getCredentials(settings)}`
