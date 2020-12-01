@@ -18,7 +18,7 @@ export const addTerm = (settings, idToEdit, term) => {
     };
 
 
-    return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_doc/${idToEdit}/_update`, {
+    return fetch(`https://cors-anywhere.herokuapp.com/${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_doc/${idToEdit}/_update`, {
         method: "POST",
         body: JSON.stringify(query),
         mode: 'no-cors',
@@ -45,7 +45,7 @@ export const removeTerm = (settings, idToEdit, term) => {
         }
     };
 
-    return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_doc/${idToEdit}/_update`, {
+    return fetch(`https://cors-anywhere.herokuapp.com/${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_doc/${idToEdit}/_update`, {
         method: "POST",
         body: JSON.stringify(query),
         mode: 'no-cors',
@@ -78,7 +78,7 @@ export const search = (settings, query) => {
         }
     }
 
-    return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_search`, {
+    return fetch(`https://cors-anywhere.herokuapp.com/${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_search`, {
         method: "POST",
         body: JSON.stringify(query),
         mode: 'no-cors',
@@ -96,7 +96,7 @@ export const search = (settings, query) => {
 
 
 export const getAirports = (settings) => {
-    return fetch("https://cors.io/?https://raw.githubusercontent.com/Konsumentverket/Airports/master/airports.json", {
+    return fetch("https://cors-anywhere.herokuapp.com/https://raw.githubusercontent.com/Konsumentverket/Airports/master/airports.json", {
         mode: 'no-cors',
         headers:{
             "Access-Control-Allow-Origin":"*"
@@ -191,7 +191,7 @@ export const createIndex = (settings) => {
            }
         }
      }
-     return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/${indexName}/`, {
+     return fetch(`https://cors-anywhere.herokuapp.com/${settings.ElasticsearchUrl}/${indexName}/`, {
         method: "PUT",
         body: JSON.stringify(query),
         mode: 'no-cors',
@@ -208,7 +208,7 @@ export const createIndex = (settings) => {
 }
 
 export const aliasExists = (settings) =>{
-    return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/_alias/${settings.ElasticsearchAlias}`,{
+    return fetch(`https://cors-anywhere.herokuapp.com/${settings.ElasticsearchUrl}/_alias/${settings.ElasticsearchAlias}`,{
         method: "HEAD",
         mode: 'no-cors',
         headers: {
@@ -231,7 +231,7 @@ export const reIndexOnServer = (settings, newIndex) => {
         }
     };
 
-    return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/_reindex`,{
+    return fetch(`https://cors-anywhere.herokuapp.com/${settings.ElasticsearchUrl}/_reindex`,{
         method: "POST",
         mode: 'no-cors',
         body: JSON.stringify(query),
@@ -261,7 +261,7 @@ export const reIndexAirports = (settings, airports, newIndex) => {
         requestStr += JSON.stringify(updateRequest) +"\n"+JSON.stringify(updateDoc)+"\n";
 
     });
-    return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/${newIndex}/_bulk`,{
+    return fetch(`https://cors-anywhere.herokuapp.com/${settings.ElasticsearchUrl}/${newIndex}/_bulk`,{
         method: "POST",
         mode: 'no-cors',
         body: requestStr,
@@ -277,7 +277,7 @@ export const reIndexAirports = (settings, airports, newIndex) => {
 export const saveCustomName = (settings,customName,iata) => {
 
 
-    return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_doc/${iata}/_update`,{
+    return fetch(`https://cors-anywhere.herokuapp.com/${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_doc/${iata}/_update`,{
         method: "POST",
         mode: 'no-cors',
         body: JSON.stringify({
@@ -298,7 +298,7 @@ export const saveCustomName = (settings,customName,iata) => {
 
 export const switchAlias = (settings, newIndex) => {
 
-    return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/_aliases`,{
+    return fetch(`https://cors-anywhere.herokuapp.com/${settings.ElasticsearchUrl}/_aliases`,{
         method: "POST",
         mode: 'no-cors',
         body: JSON.stringify({
