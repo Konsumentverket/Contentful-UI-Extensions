@@ -25,8 +25,10 @@ export default ({settings}) => {
     useEffect(()=>{
 
         const credentials = new Buffer.from(`${settings.ElasticsearchUserName}:${settings.ElasticsearchPassword}`).toString('base64')
-        fetch(`https://cors-anywhere.herokuapp.com/${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_count`,{     
+        fetch(`${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_count`,{
+            
             headers:{
+                "Access-Control-Allow-Origin": "*",
                 "Accept": "application/json",
                 "Content-Type": "application/json",
                 'Authorization': `Basic ${credentials}`
@@ -36,8 +38,9 @@ export default ({settings}) => {
         .then(response => response.json())
         .then(json => setDocCount(json.count));
 
-        fetch(`${settings.ElasticsearchUrl}/_alias/${settings.ElasticsearchAlias}`,{     
+        fetch(`${settings.ElasticsearchUrl}/_alias/${settings.ElasticsearchAlias}`,{
             headers:{
+                "Access-Control-Allow-Origin": "*",
                 "Accept": "application/json",
                 "Content-Type": "application/json",
                 'Authorization': `Basic ${credentials}`
