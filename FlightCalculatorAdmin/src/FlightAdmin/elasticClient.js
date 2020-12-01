@@ -21,6 +21,7 @@ export const addTerm = (settings, idToEdit, term) => {
     return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_doc/${idToEdit}/_update`, {
         method: "POST",
         body: JSON.stringify(query),
+        mode: 'cors',
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json",
@@ -46,6 +47,7 @@ export const removeTerm = (settings, idToEdit, term) => {
     return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_doc/${idToEdit}/_update`, {
         method: "POST",
         body: JSON.stringify(query),
+        mode: 'cors',
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json",
@@ -77,6 +79,7 @@ export const search = (settings, query) => {
     return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_search`, {
         method: "POST",
         body: JSON.stringify(query),
+        mode: 'cors',
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json",
@@ -90,8 +93,10 @@ export const search = (settings, query) => {
 
 
 export const getAirports = (settings) => {
-    return fetch("https://cors.io/?https://raw.githubusercontent.com/Konsumentverket/Airports/master/airports.json")
-        .then(response => response.json())
+    return fetch("https://cors.io/?https://raw.githubusercontent.com/Konsumentverket/Airports/master/airports.json", {
+        mode: 'cors'
+    })
+    .then(response => response.json())
 }
 
 export const createIndex = (settings) => {
@@ -180,9 +185,10 @@ export const createIndex = (settings) => {
            }
         }
      }
-     return fetch(`${settings.ElasticsearchUrl}/${indexName}/`, {
+     return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/${indexName}/`, {
         method: "PUT",
         body: JSON.stringify(query),
+        mode: 'cors',
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json",
@@ -195,8 +201,9 @@ export const createIndex = (settings) => {
 }
 
 export const aliasExists = (settings) =>{
-    return fetch(`${settings.ElasticsearchUrl}/_alias/${settings.ElasticsearchAlias}`,{
+    return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/_alias/${settings.ElasticsearchAlias}`,{
         method: "HEAD",
+        mode: 'cors',
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json",
@@ -216,8 +223,9 @@ export const reIndexOnServer = (settings, newIndex) => {
         }
     };
 
-    return fetch(`${settings.ElasticsearchUrl}/_reindex`,{
+    return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/_reindex`,{
         method: "POST",
+        mode: 'cors',
         body: JSON.stringify(query),
         headers: {
             "Accept": "application/json",
@@ -244,8 +252,9 @@ export const reIndexAirports = (settings, airports, newIndex) => {
         requestStr += JSON.stringify(updateRequest) +"\n"+JSON.stringify(updateDoc)+"\n";
 
     });
-    return fetch(`${settings.ElasticsearchUrl}/${newIndex}/_bulk`,{
+    return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/${newIndex}/_bulk`,{
         method: "POST",
+        mode: 'cors',
         body: requestStr,
         headers: {
             "Accept": "application/json",
@@ -258,8 +267,9 @@ export const reIndexAirports = (settings, airports, newIndex) => {
 export const saveCustomName = (settings,customName,iata) => {
 
 
-    return fetch(`${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_doc/${iata}/_update`,{
+    return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_doc/${iata}/_update`,{
         method: "POST",
+        mode: 'cors',
         body: JSON.stringify({
             "doc" : {
                 "customName" : customName
@@ -277,8 +287,9 @@ export const saveCustomName = (settings,customName,iata) => {
 
 export const switchAlias = (settings, newIndex) => {
 
-    return fetch(`${settings.ElasticsearchUrl}/_aliases`,{
+    return fetch(`https://cors.io/?${settings.ElasticsearchUrl}/_aliases`,{
         method: "POST",
+        mode: 'cors',
         body: JSON.stringify({
             "actions": [
                 {"remove": { "index" : "*", "alias" : settings.ElasticsearchAlias }},
