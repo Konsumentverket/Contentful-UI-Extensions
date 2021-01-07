@@ -2,6 +2,7 @@
   "name": "kundo-category-selector",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@contentful/field-editor-single-line": "^0.11.4",
     "@contentful/field-editor-test-utils": "^0.8.3",
