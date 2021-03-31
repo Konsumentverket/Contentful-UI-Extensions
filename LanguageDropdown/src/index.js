@@ -20,7 +20,8 @@ const supportedLangs = {
   yi: "Jiddisch",
   fiu: "Meänkieli",
   rom: "Romska",
-  se: "Samiska"
+  se: "Samiska",
+  sv: "Svenska"
 }
 
 export class App extends React.Component {
