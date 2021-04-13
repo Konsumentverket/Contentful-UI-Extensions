@@ -1,0 +1,19 @@
+{
+  "id": "MFSPeriodSelector",
+  "name": "MFSPeriodSelector",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Symbol"
+  ],
+  "parameters": {
+    "instance": [
+      {
+        "id": "url",
+        "type": "Symbol",
+        "name": "url",
+        "description": "url att hämta perioderna",
+        "required": true
+      }
+    ]
+  }
+}
