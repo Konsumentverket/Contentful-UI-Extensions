@@ -1,0 +1,15 @@
+html,
+body,
+div {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+.teamSelect {
+  padding: 0.8rem;
+  border: 1px solid #bbb;
+}

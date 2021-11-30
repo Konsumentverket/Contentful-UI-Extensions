@@ -1,0 +1,26 @@
+{
+  "id": "SelectTeam",
+  "name": "SelectTeam",
+  "fieldTypes": ["Symbol"],
+  "src": "http://localhost:1234",
+  "locations": [
+    {
+      "location": "entry-field",
+      "fieldTypes": [{ "type": "Symbol" }]
+    },
+    {
+      "location": "app-config"
+    }
+  ],
+
+  "parameters": {
+    "instance": [
+      {
+        "id": "helpText",
+        "type": "Symbol",
+        "name": "Help text",
+        "description": "Help text for a user to help them understand the editor"
+      }
+    ]
+  }
+}
