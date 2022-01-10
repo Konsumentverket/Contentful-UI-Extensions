@@ -14,11 +14,11 @@ export const App = ({ sdk }) => {
   const [teams, setTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState(null);
 
-  const onExternalChange = value => {
+  const onExternalChange = (value) => {
     setValue(value);
   };
 
-  const onChange = e => {
+  const onChange = (e) => {
     const value = e.currentTarget.value;
     setValue(value);
     if (value) {
@@ -40,20 +40,20 @@ export const App = ({ sdk }) => {
 
   useEffect(() => {
     const client = createClient({
-      accessToken: 'N0uF-FQd3dILAQFDJ0-Ai5bNAuYxgIq9fAEw1Pu0sFs'
+      accessToken: 'N0uF-FQd3dILAQFDJ0-Ai5bNAuYxgIq9fAEw1Pu0sFs',
     });
 
-    let test = client
+    client
       .getSpace('yhw377pukdz9')
-      .then(space => space.getTeams())
-      .then(teamsCollection => setTeams(teamsCollection.items))
+      .then((space) => space.getTeams())
+      .then((teamsCollection) => setTeams(teamsCollection.items))
       .catch(console.error);
   }, []);
 
   return (
     <select className="teamSelect" value={value} onChange={onChange}>
       <option value="">Välj ett team</option>
-      {teams.map(team => (
+      {teams.map((team) => (
         <option key={team.sys.id} value={team.sys.id}>
           {team.name}
         </option>
@@ -63,10 +63,10 @@ export const App = ({ sdk }) => {
 };
 
 App.propTypes = {
-  sdk: PropTypes.object.isRequired
+  sdk: PropTypes.object.isRequired,
 };
 
-init(sdk => {
+init((sdk) => {
   ReactDOM.render(<App sdk={sdk} />, document.getElementById('root'));
 });
 
