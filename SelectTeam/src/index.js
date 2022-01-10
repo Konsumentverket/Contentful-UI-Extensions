@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import { TextInput } from '@contentful/forma-36-react-components';
 import { init } from 'contentful-ui-extensions-sdk';
 import '@contentful/forma-36-react-components/dist/styles.css';
 import './index.css';
@@ -12,7 +11,6 @@ import { createClient } from 'contentful-management';
 export const App = ({ sdk }) => {
   const [value, setValue] = useState(sdk.field.getValue() || '');
   const [teams, setTeams] = useState([]);
-  const [selectedTeam, setSelectedTeam] = useState(null);
 
   const onExternalChange = (value) => {
     setValue(value);
