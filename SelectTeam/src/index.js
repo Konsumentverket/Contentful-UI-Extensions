@@ -37,7 +37,7 @@ export const App = ({ sdk }) => {
   });
 
   useEffect(() => {
-    const client = process.env.REACT_APP_NOT_SECRET_CODE,
+    const client = process.env.REACT_APP_ACESS_TOKEN,
     });
 
     client
