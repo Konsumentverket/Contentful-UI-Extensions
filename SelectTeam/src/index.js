@@ -37,12 +37,11 @@ export const App = ({ sdk }) => {
   });
 
   useEffect(() => {
-    const client = createClient({
-      accessToken: 'N0uF-FQd3dILAQFDJ0-Ai5bNAuYxgIq9fAEw1Pu0sFs',
+    const client = process.env.REACT_APP_NOT_SECRET_CODE,
     });
 
     client
-      .getSpace('yhw377pukdz9')
+      .getSpace(process.env.REACT_APP_SPACE)
       .then((space) => space.getTeams())
       .then((teamsCollection) => setTeams(teamsCollection.items))
       .catch(console.error);
