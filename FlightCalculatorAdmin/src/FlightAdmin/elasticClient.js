@@ -18,7 +18,7 @@ export const addTerm = (settings, idToEdit, term) => {
     };
 
 
-    return fetch(`${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_doc/${idToEdit}/_update`, {
+    return fetch(`${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_update/${idToEdit}`, {
         method: "POST",
         body: JSON.stringify(query),
         headers: {
@@ -44,7 +44,7 @@ export const removeTerm = (settings, idToEdit, term) => {
         }
     };
 
-    return fetch(`${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_doc/${idToEdit}/_update`, {
+    return fetch(`${settings.ElasticsearchUrl}/${settings.ElasticsearchAlias}/_update/${idToEdit}`, {
         method: "POST",
         body: JSON.stringify(query),
         headers: {
@@ -118,7 +118,7 @@ export const createIndex = (settings) => {
         minutes = "0" + minutes;
     if (seconds < 10)
         seconds = "0" + seconds;
-    const timestamp = cur_day + "." + hours + ":" + minutes + ":" + seconds;
+    const timestamp = cur_day + "." + hours + "-" + minutes + "-" + seconds;
     const indexName = settings.ElasticsearchAlias + timestamp;
 
     var query = {
@@ -127,7 +127,7 @@ export const createIndex = (settings) => {
             "number_of_replicas": 1
         },
         "mappings":{
-           "_doc":{
+        //    "_doc":{
               "properties":{
                  "name":{
                     "type":"text",
@@ -160,7 +160,7 @@ export const createIndex = (settings) => {
                     "search_analyzer":"standard"
                  }
               }
-           }
+           //}
         },
         "settings":{
            "analysis":{
@@ -240,8 +240,7 @@ export const reIndexAirports = (settings, airports, newIndex) => {
     Object.values(airports).forEach((airport) => {
         const updateRequest = {"update":{
                 "_id":airport.iata,
-                "_index":newIndex,
-                "_type":"_doc"
+                "_index":newIndex
             }
         };
         const updateDoc = {
